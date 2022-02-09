@@ -1,4 +1,4 @@
-let studentList = {
+let curbsideNumbers = {
   1: "Kyle Smith",
   2: "Joe Thomas",
   3: "Sally Harris",
@@ -11,4 +11,4 @@ let studentList = {
   10: "Jeremiah Lewis",
 };
 
-export default studentList;
+export default curbsideNumbers;
