@@ -3,7 +3,7 @@ form {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  width: 100%;
+  width: 25%;
   border: 1px solid lightgray;
   border-radius: 5px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -13,7 +13,7 @@ form {
 
 input {
   border-radius: 5px;
-  width: 40%;
+  width: 80%;
   margin-bottom: 5px;
   padding: 5px;
 }
