@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import curbsideNumbers from "./namesAndNumbers";
 import "./Form.css";
 
-export default function CurbsideNumberForm({ setCurbsideNames }) {
+export default function CurbsideNumberForm({
+  curbsideNames,
+  setCurbsideNames,
+}) {
   const [curbsideNumber, setCurbsideNumber] = useState("");
 
   const handleChange = (evt) => {
@@ -11,8 +14,10 @@ export default function CurbsideNumberForm({ setCurbsideNames }) {
   };
 
   const handleSubmit = (evt) => {
-    if (curbsideNumbers[curbsideNumber]) {
-      const nameToAdd = curbsideNumbers[curbsideNumber];
+    evt.preventDefault();
+
+    const nameToAdd = curbsideNumbers[curbsideNumber];
+    if (nameToAdd && curbsideNames.indexOf(nameToAdd) === -1) {
       setCurbsideNames((curbsideNames) => [...curbsideNames, nameToAdd]);
     }
 
@@ -21,7 +26,7 @@ export default function CurbsideNumberForm({ setCurbsideNames }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="curbsideNumber">Enter the curbside number</label>
+      <label htmlFor="curbsideNumber">Curbside number</label>
       <input
         type="text"
         placeholder="Enter number here"
