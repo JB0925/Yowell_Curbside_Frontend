@@ -10,7 +10,7 @@ export default function CurbsideNumberForm({
   const [usedNumbers, setUsedNumbers] = useState([]);
 
   const ws = useWebSocketLite({
-    socketUrl: process.env.REACT_APP_BASE_URL,
+    socketUrl: "https://yowell-curbside.herokuapp.com/",
     curbsideData: curbsideNames,
     setCurbsideData: setCurbsideNames,
     setUsedNumbers: setUsedNumbers,

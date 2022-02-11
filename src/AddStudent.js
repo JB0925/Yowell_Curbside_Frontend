@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import "./addStudent.css";
 
 export default function AddStudent() {
-  const BASE_URL = process.env.REACT_APP_BASE_URL || "http://127.0.0.1:3001";
+  const BASE_URL =
+    "https://yowell-curbside.herokuapp.com/" || "http://127.0.0.1:3001";
   const initialState = {
     number: "",
     name: "",
