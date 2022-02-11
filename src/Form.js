@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import curbsideNumbers from "./namesAndNumbers";
+import useWebSocketLite from "./webSocketHook";
 import "./Form.css";
 
 export default function CurbsideNumberForm({
@@ -7,6 +7,14 @@ export default function CurbsideNumberForm({
   setCurbsideNames,
 }) {
   const [curbsideNumber, setCurbsideNumber] = useState("");
+  const [usedNumbers, setUsedNumbers] = useState([]);
+
+  const ws = useWebSocketLite({
+    socketUrl: "ws://127.0.0.1:3001",
+    curbsideData: curbsideNames,
+    setCurbsideData: setCurbsideNames,
+    setUsedNumbers: setUsedNumbers,
+  });
 
   const handleChange = (evt) => {
     const { value } = evt.target;
@@ -15,12 +23,9 @@ export default function CurbsideNumberForm({
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-
-    const nameToAdd = curbsideNumbers[curbsideNumber];
-    if (nameToAdd && curbsideNames.indexOf(nameToAdd) === -1) {
-      setCurbsideNames((curbsideNames) => [...curbsideNames, nameToAdd]);
+    if (usedNumbers.indexOf(curbsideNumber) === -1) {
+      ws.send(curbsideNumber);
     }
-
     setCurbsideNumber("");
   };
 

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import CurbsideNumberForm from "./Form";
 import "./studentList.css";
 
 export default function StudentList() {
   const [curbsideNames, setCurbsideNames] = useState([]);
+  const ulRef = useRef();
+  const ulTogglerRef = useRef();
 
   const removeName = (name) => {
     const updatedCurbsideNames = curbsideNames.filter(
@@ -12,11 +14,20 @@ export default function StudentList() {
     setCurbsideNames([...updatedCurbsideNames]);
   };
 
+  const toggleUlVisibility = () => {
+    ulRef.current.classList.toggle("show");
+    ulTogglerRef.current.classList.toggle("fa-angle-up");
+  };
+
   const studentsInQueue = () => {
     return curbsideNames.map((name) => (
-      <div className="listItem">
+      <div className="listItem" key={name}>
         <li>{name}</li>
-        <i class="fa-solid fa-x" onClick={() => removeName(name)}></i>
+        <i
+          id="remove"
+          className="fa-solid fa-x"
+          onClick={() => removeName(name)}
+        ></i>
       </div>
     ));
   };
@@ -27,7 +38,15 @@ export default function StudentList() {
         curbsideNames={curbsideNames}
         setCurbsideNames={setCurbsideNames}
       />
-      <ul>{studentsInQueue()}</ul>
+      <div className="ul-holder">
+        <i
+          id="showUl"
+          ref={ulTogglerRef}
+          className="fa-solid fa-angle-down"
+          onClick={toggleUlVisibility}
+        ></i>
+        <ul ref={ulRef}>{studentsInQueue()}</ul>
+      </div>
     </div>
   );
 }
