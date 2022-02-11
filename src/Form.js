@@ -10,7 +10,7 @@ export default function CurbsideNumberForm({
   const [usedNumbers, setUsedNumbers] = useState([]);
 
   const ws = useWebSocketLite({
-    socketUrl: "ws://127.0.0.1:3001",
+    socketUrl: "ws://nameless-wave-46063.herokuapp.com/",
     curbsideData: curbsideNames,
     setCurbsideData: setCurbsideNames,
     setUsedNumbers: setUsedNumbers,
