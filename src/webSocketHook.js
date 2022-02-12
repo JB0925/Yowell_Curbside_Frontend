@@ -50,7 +50,8 @@ function useWebSocketLite({
         if (msg !== "Student not found") {
           let num = getNumFromMessage(msg);
           setUsedNumbers((usedNumbers) => usedNumbers.concat(num));
-          setCurbsideData((curbsideInfo) => curbsideInfo.concat(msg));
+          // setCurbsideData((curbsideInfo) => curbsideInfo.concat(msg));
+          setCurbsideData((curbsideData) => [...curbsideData, msg]);
         }
       };
     };
