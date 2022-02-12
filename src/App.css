@@ -77,3 +77,9 @@ img {
     width: 70%;
   }
 }
+
+@media screen and (max-width: 600px) {
+  #header {
+    font-size: 1.5rem;
+  }
+}
