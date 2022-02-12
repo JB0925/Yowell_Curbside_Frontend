@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import "./addStudent.css";
 
-export default function AddStudent() {
+export default function AddStudent({ toggleSidebar }) {
   const BASE_URL =
     "https://yowell-curbside.herokuapp.com/" || "http://127.0.0.1:3001";
   const initialState = {
@@ -28,6 +28,7 @@ export default function AddStudent() {
       .then(() => setUserFeedback("Student added successfully!"))
       .catch(() => setUserFeedback("An error occurred."));
     setStudentData(initialState);
+    setTimeout(() => toggleSidebar(), 1000);
   };
 
   const giveUserFeedback = () => {
@@ -62,7 +63,9 @@ export default function AddStudent() {
           name="name"
           required
         />
-        <button type="submit">Submit</button>
+        <button className="studentNumber" type="submit">
+          Submit
+        </button>
       </form>
       {userFeedback.length ? giveUserFeedback() : null}
     </div>

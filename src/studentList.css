@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin-top: 10%;
 }
 
 ul {
@@ -62,7 +63,8 @@ li {
   font-size: 2rem;
   position: absolute;
   top: 0;
-  right: 5%;
+  right: 3%;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 900px) {
@@ -78,6 +80,10 @@ li {
   }
 
   .StudentList {
+    margin-top: 15%;
+  }
+
+  .ul-holder {
     margin-top: 10%;
   }
 }

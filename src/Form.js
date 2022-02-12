@@ -41,7 +41,9 @@ export default function CurbsideNumberForm({
         name="curbsideNumber"
         required
       />
-      <button type="submit">Submit</button>
+      <button className="studentNumber" type="submit">
+        Submit
+      </button>
     </form>
   );
 }

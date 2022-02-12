@@ -23,13 +23,14 @@ label {
   margin-bottom: 5px;
 }
 
-button {
-  background-color: dodgerblue;
+.studentNumber {
+  background-color: tomato;
   color: white;
   padding: 10px;
   font-size: 1rem;
-  border: 1px solid dodgerblue;
+  border: 1px solid tomato;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 900px) {
