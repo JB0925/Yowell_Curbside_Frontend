@@ -50,7 +50,6 @@ function useWebSocketLite({
         if (msg !== "Student not found") {
           let num = getNumFromMessage(msg);
           setUsedNumbers((usedNumbers) => usedNumbers.concat(num));
-          // setCurbsideData((curbsideInfo) => curbsideInfo.concat(msg));
           setCurbsideData((curbsideData) => [...curbsideData, msg]);
         }
       };
@@ -72,7 +71,6 @@ function useWebSocketLite({
       ws.close();
     };
     // retry dependency here triggers the connection attempt
-    // eslint ignore
   }, [retry]);
 
   return { send, data, readyState };
