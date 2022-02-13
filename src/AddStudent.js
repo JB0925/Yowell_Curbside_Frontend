@@ -42,6 +42,7 @@ export default function AddStudent({ toggleSidebar }) {
 
   return (
     <div className="addStudent">
+      <p>Add a Student</p>
       <form onSubmit={handleSubmit} id="addStudentForm">
         <label htmlFor="number">Curbside number</label>
         <input
