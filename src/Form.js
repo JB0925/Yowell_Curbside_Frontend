@@ -31,7 +31,8 @@ export default function CurbsideNumberForm({
   };
 
   const handleSubmit = async (evt) => {
-    setIsEditing((isEditing) => true);
+    if (!isEditing) setIsEditing((isEditing) => true);
+
     evt.preventDefault();
     if (usedNumbers.indexOf(curbsideNumber) === -1) {
       await axios.patch(
