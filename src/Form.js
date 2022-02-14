@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import useWebSocketLite from "./webSocketHook";
 import "./Form.css";
@@ -9,6 +9,7 @@ export default function CurbsideNumberForm({
 }) {
   const [curbsideNumber, setCurbsideNumber] = useState("");
   const [usedNumbers, setUsedNumbers] = useState([]);
+  const inputRef = useRef();
 
   const ws = useWebSocketLite({
     socketUrl: "wss://yowell-curbside.herokuapp.com/",
@@ -35,12 +36,14 @@ export default function CurbsideNumberForm({
       ws.send(`add_${curbsideNumber}`);
     }
     setCurbsideNumber("");
+    inputRef.current.focus();
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="curbsideNumber">Curbside number</label>
       <input
+        ref={inputRef}
         type="tel"
         placeholder="Enter number here"
         id="curbsideNumber"
