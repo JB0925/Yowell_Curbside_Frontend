@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import useWebSocketLite from "./webSocketHook";
 import "./Form.css";
 
@@ -21,10 +22,17 @@ export default function CurbsideNumberForm({
     setCurbsideNumber(value);
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
     if (usedNumbers.indexOf(curbsideNumber) === -1) {
-      ws.send(curbsideNumber);
+      await axios.patch(
+        `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
+        {
+          number: curbsideNumber,
+        }
+      );
+
+      ws.send(`add_${curbsideNumber}`);
     }
     setCurbsideNumber("");
   };

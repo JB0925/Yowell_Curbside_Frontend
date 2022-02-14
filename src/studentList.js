@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
 import CurbsideNumberForm from "./Form";
 import "./studentList.css";
 
@@ -7,9 +8,35 @@ export default function StudentList() {
   const ulRef = useRef();
   const ulTogglerRef = useRef();
 
-  const removeName = (name) => {
+  useEffect(() => {
+    const getLoadedStudents = async () => {
+      const response = await axios.get(
+        "https://yowell-curbside.herokuapp.com/students/status"
+      );
+
+      const { loadedStudents } = response.data;
+      loadedStudents.length &&
+        setCurbsideNames((curbsideNames) => [...loadedStudents]);
+    };
+
+    getLoadedStudents();
+  }, []);
+
+  const getNumberFromNameString = (nameString) => {
+    return nameString.split(":")[0].replace("#", "");
+  };
+
+  const removeName = async (name) => {
     const updatedCurbsideNames = curbsideNames.filter(
       (curbsideName) => curbsideName !== name
+    );
+
+    const curbsideNumber = getNumberFromNameString(name);
+    await axios.patch(
+      `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
+      {
+        number: curbsideNumber,
+      }
     );
     setCurbsideNames([...updatedCurbsideNames]);
   };

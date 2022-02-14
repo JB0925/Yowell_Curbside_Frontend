@@ -42,15 +42,21 @@ function useWebSocketLite({
         };
       });
 
-      const getNumFromMessage = (msg) => msg.split(":")[0].replace("#", "");
+      const getNumFromStudent = (msg) => msg.split(":")[0].replace("#", "");
 
       // receive messages
       ws.onmessage = (event) => {
-        const msg = formatMessage(event.data);
-        if (msg !== "Student not found") {
-          let num = getNumFromMessage(msg);
+        const { state, newStudent } = formatMessage(event.data);
+        if (newStudent !== "Student not found") {
+          let num = getNumFromStudent(newStudent);
           setUsedNumbers((usedNumbers) => usedNumbers.concat(num));
-          setCurbsideData((curbsideData) => [...curbsideData, msg]);
+          if (state === "add") {
+            setCurbsideData((curbsideData) => [...curbsideData, newStudent]);
+          } else {
+            setCurbsideData((curbsideData) => [
+              ...curbsideData.filter((name) => name !== newStudent),
+            ]);
+          }
         }
       };
     };
