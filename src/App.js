@@ -16,6 +16,12 @@ function App() {
       <nav>
         <img src={YESLogo} alt="school logo" />
         <h1 id="header">YES Curbside!</h1>
+        <i
+          id="burgerMenu"
+          className="fa-solid fa-bars"
+          ref={burgerRef}
+          onClick={toggleSidebar}
+        ></i>
       </nav>
       <div className="sidebar-container" ref={sidebarRef}>
         <div className="sidebar">
@@ -27,12 +33,6 @@ function App() {
           <AddStudent toggleSidebar={toggleSidebar} />
         </div>
       </div>
-      <i
-        id="burgerMenu"
-        className="fa-solid fa-bars"
-        ref={burgerRef}
-        onClick={toggleSidebar}
-      ></i>
       <StudentList />
     </div>
   );

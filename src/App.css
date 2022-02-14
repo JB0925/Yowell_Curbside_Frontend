@@ -49,8 +49,9 @@ nav {
   color: white;
   position: absolute;
   cursor: pointer;
-  top: 6%;
+  top: 50%;
   right: 3%;
+  transform: translateY(-30%);
 }
 
 #closeBtn {
