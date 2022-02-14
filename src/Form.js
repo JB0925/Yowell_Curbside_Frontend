@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import useWebSocketLite from "./webSocketHook";
 import "./Form.css";
@@ -9,14 +9,6 @@ export default function CurbsideNumberForm({
 }) {
   const [curbsideNumber, setCurbsideNumber] = useState("");
   const [usedNumbers, setUsedNumbers] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const inputRef = useRef();
-
-  useEffect(() => {
-    if (isEditing) {
-      inputRef.current.focus();
-    }
-  }, [isEditing]);
 
   const ws = useWebSocketLite({
     socketUrl: "wss://yowell-curbside.herokuapp.com/",
@@ -31,8 +23,6 @@ export default function CurbsideNumberForm({
   };
 
   const handleSubmit = async (evt) => {
-    if (!isEditing) setIsEditing((isEditing) => true);
-
     evt.preventDefault();
     if (usedNumbers.indexOf(curbsideNumber) === -1) {
       await axios.patch(
@@ -51,7 +41,6 @@ export default function CurbsideNumberForm({
     <form onSubmit={handleSubmit}>
       <label htmlFor="curbsideNumber">Curbside number</label>
       <input
-        ref={inputRef}
         type="tel"
         placeholder="Enter number here"
         id="curbsideNumber"
