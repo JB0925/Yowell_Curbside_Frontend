@@ -41,7 +41,7 @@ export default function CurbsideNumberForm({
     <form onSubmit={handleSubmit}>
       <label htmlFor="curbsideNumber">Curbside number</label>
       <input
-        type="text"
+        type="tel"
         placeholder="Enter number here"
         id="curbsideNumber"
         value={curbsideNumber}
