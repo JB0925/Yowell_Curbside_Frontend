@@ -13,8 +13,10 @@ function App() {
   };
   return (
     <div className="App">
-      <img src={YESLogo} alt="school logo" />
-      <h1 id="header">YES Curbside!</h1>
+      <nav>
+        <img src={YESLogo} alt="school logo" />
+        <h1 id="header">YES Curbside!</h1>
+      </nav>
       <div className="sidebar-container" ref={sidebarRef}>
         <div className="sidebar">
           <i

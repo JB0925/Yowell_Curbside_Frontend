@@ -47,8 +47,10 @@ li {
 }
 
 .show {
-  display: flex;
-  width: 100%;
+  /* display: flex; */
+  width: auto;
+  margin-right: 4%;
+  margin-left: 3%;
   opacity: 1;
 }
 
