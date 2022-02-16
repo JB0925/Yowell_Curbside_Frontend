@@ -14,9 +14,11 @@ export default function StudentList() {
         "https://yowell-curbside.herokuapp.com/students/status"
       );
 
-      const { loadedStudents } = response.data;
-      loadedStudents.length &&
-        setCurbsideNames((curbsideNames) => [...loadedStudents]);
+      let { loadedStudents } = response.data;
+      loadedStudents = loadedStudents.length
+        ? loadedStudents.map((n) => n.info)
+        : [];
+      setCurbsideNames((curbsideNames) => [...loadedStudents]);
     };
 
     getLoadedStudents();
