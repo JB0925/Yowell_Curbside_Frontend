@@ -42,7 +42,10 @@ function useWebSocketLite({
         };
       });
 
-      const getNumFromStudent = (msg) => msg.split(":")[0].replace("#", "");
+      const getNumFromStudent = (msg) => {
+        if (!msg) return;
+        return msg.split(":")[0].replace("#", "");
+      };
 
       // receive messages
       ws.onmessage = (event) => {
