@@ -78,9 +78,24 @@ img {
   width: 75px;
 }
 
+#horseshoe {
+  position: fixed;
+  opacity: 0.7;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80%;
+  width: 100%;
+  z-index: -1;
+}
+
 @media screen and (max-width: 900px) {
   .sidebar {
     width: 70%;
+  }
+
+  #horseshoe {
+    width: 120%;
   }
 }
 

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import CurbsideNumberForm from "./Form";
+import Horseshoe from "./horseshoe.png";
 import "./studentList.css";
 
 export default function StudentList() {
@@ -63,6 +64,9 @@ export default function StudentList() {
 
   return (
     <div className="StudentList">
+      <div className="horseshoe-container">
+        <img id="horseshoe" src={Horseshoe} alt="horseshoe" />
+      </div>
       <CurbsideNumberForm
         curbsideNames={curbsideNames}
         setCurbsideNames={setCurbsideNames}
