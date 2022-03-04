@@ -7,7 +7,6 @@ export default function CurbsideNumberForm({ curbsideData }) {
   const [curbsideNumber, setCurbsideNumber] = useState("");
   const { curbsideNames, setCurbsideNames, usedNumbers, setUsedNumbers } =
     curbsideData;
-  console.log(curbsideNames);
 
   const ws = useWebSocketLite({
     // socketUrl: "wss://yowell-curbside.herokuapp.com/",
@@ -22,14 +21,31 @@ export default function CurbsideNumberForm({ curbsideData }) {
     setCurbsideNumber(value);
   };
 
+  const getNumFromStudent = (msg) => {
+    if (!msg) return;
+    const pattern = /\d+/g;
+    return msg.match(pattern);
+  };
+
   const studentIsInList = (number) => {
-    console.log(curbsideNames);
     if (!curbsideNames.length) return false;
     for (let student of curbsideNames) {
-      const studentNum = student.split(":")[0].replace("#", "");
+      // const studentNum = student.split(":")[0].replace("#", "");
+      const studentNums = getNumFromStudent(curbsideNames.join(""));
+      console.log(studentNums);
 
-      if (studentNum === number) {
-        console.log("yes");
+      // if (studentNum === number) {
+      //   console.log("yes");
+      //   return true;
+      // }
+      let allNumbers;
+      if (number.split("+").length > 1) {
+        allNumbers = number.split("+");
+        if (allNumbers.some((n) => studentNums.includes(n))) {
+          return true;
+        }
+      }
+      if (studentNums.find((n) => n === number)) {
         return true;
       }
     }
@@ -38,6 +54,7 @@ export default function CurbsideNumberForm({ curbsideData }) {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
+    console.log(studentIsInList(curbsideNumber));
     if (
       usedNumbers.indexOf(curbsideNumber) === -1 &&
       !studentIsInList(curbsideNumber)

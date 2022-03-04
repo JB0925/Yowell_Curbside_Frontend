@@ -15,7 +15,6 @@ function App() {
 
   const [curbsideNames, setCurbsideNames] = useState([]);
   const [usedNumbers, setUsedNumbers] = useState([]);
-  console.log(usedNumbers);
   useEffect(() => {
     const getLoadedStudents = async () => {
       const response = await axios.get(
