@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
+import axios from "axios";
 import YESLogo from "./YESLogo2.png";
 import StudentList from "./studentList";
 import "./App.css";
@@ -11,6 +12,37 @@ function App() {
   const toggleSidebar = () => {
     sidebarRef.current.classList.toggle("open");
   };
+
+  const [curbsideNames, setCurbsideNames] = useState([]);
+  const [usedNumbers, setUsedNumbers] = useState([]);
+  console.log(usedNumbers);
+  useEffect(() => {
+    const getLoadedStudents = async () => {
+      const response = await axios.get(
+        // "https://yowell-curbside.herokuapp.com/students/status"
+        "http://127.0.0.1:3001/students/status"
+      );
+
+      let { loadedStudents } = response.data;
+      console.log(loadedStudents);
+      if (loadedStudents.length) {
+        let [returnArray, numberArray] = loadedStudents;
+        returnArray = returnArray.map((n) => n.info);
+        setCurbsideNames((curbsideNames) => [...returnArray]);
+        setUsedNumbers((usedNumbers) => [...numberArray]);
+      }
+    };
+
+    getLoadedStudents();
+  }, []);
+
+  const curbsideData = {
+    curbsideNames,
+    setCurbsideNames,
+    usedNumbers,
+    setUsedNumbers,
+  };
+
   return (
     <div className="App">
       <nav>
@@ -33,7 +65,11 @@ function App() {
           <AddStudent toggleSidebar={toggleSidebar} />
         </div>
       </div>
-      <StudentList />
+      <StudentList
+        // curbsideNames={curbsideNames}
+        // setCurbsideNames={setCurbsideNames}
+        curbsideData={curbsideData}
+      />
     </div>
   );
 }

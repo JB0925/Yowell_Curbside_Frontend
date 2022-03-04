@@ -1,29 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import axios from "axios";
 import CurbsideNumberForm from "./Form";
 import Horseshoe from "./horseshoe.png";
 import "./studentList.css";
 
-export default function StudentList() {
-  const [curbsideNames, setCurbsideNames] = useState([]);
+export default function StudentList({ curbsideData }) {
+  const { curbsideNames, setCurbsideNames } = curbsideData;
   const ulRef = useRef();
   const ulTogglerRef = useRef();
-
-  useEffect(() => {
-    const getLoadedStudents = async () => {
-      const response = await axios.get(
-        "https://yowell-curbside.herokuapp.com/students/status"
-      );
-
-      let { loadedStudents } = response.data;
-      loadedStudents = loadedStudents.length
-        ? loadedStudents.map((n) => n.info)
-        : [];
-      setCurbsideNames((curbsideNames) => [...loadedStudents]);
-    };
-
-    getLoadedStudents();
-  }, []);
 
   const getNumberFromNameString = (nameString) => {
     return nameString.split(":")[0].replace("#", "");
@@ -36,7 +20,8 @@ export default function StudentList() {
 
     const curbsideNumber = getNumberFromNameString(name);
     await axios.patch(
-      `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
+      // `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
+      `http://127.0.0.1:3001/${curbsideNumber}`,
       {
         number: curbsideNumber,
       }
@@ -67,10 +52,7 @@ export default function StudentList() {
       <div className="horseshoe-container">
         <img id="horseshoe" src={Horseshoe} alt="horseshoe" />
       </div>
-      <CurbsideNumberForm
-        curbsideNames={curbsideNames}
-        setCurbsideNames={setCurbsideNames}
-      />
+      <CurbsideNumberForm curbsideData={curbsideData} />
       <div className="ul-holder">
         <i
           id="showUl"

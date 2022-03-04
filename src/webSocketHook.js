@@ -8,7 +8,6 @@ import { useState, useEffect } from "react";
 // the interval between retries
 function useWebSocketLite({
   socketUrl,
-  curbsideData,
   setCurbsideData,
   setUsedNumbers,
   retry: defaultRetry = 3,
@@ -44,13 +43,14 @@ function useWebSocketLite({
 
       const getNumFromStudent = (msg) => {
         if (!msg) return;
-        return msg.split(":")[0].replace("#", "");
+        const pattern = /\d+/g;
+        return msg.match(pattern);
       };
 
       // receive messages
       ws.onmessage = (event) => {
         const { state, newStudent } = formatMessage(event.data);
-        if (newStudent !== "Student not found") {
+        if (newStudent !== "Student not found" && newStudent !== undefined) {
           let num = getNumFromStudent(newStudent);
           setUsedNumbers((usedNumbers) => usedNumbers.concat(num));
           if (state === "add") {
@@ -80,7 +80,7 @@ function useWebSocketLite({
       ws.close();
     };
     // retry dependency here triggers the connection attempt
-  }, [retry]);
+  }, [retry, setCurbsideData, setUsedNumbers, socketUrl, retryInterval]);
 
   return { send, data, readyState };
 }
