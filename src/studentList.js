@@ -9,8 +9,14 @@ export default function StudentList({ curbsideData }) {
   const ulRef = useRef();
   const ulTogglerRef = useRef();
 
-  const getNumberFromNameString = (nameString) => {
+  const getOneNumberFromNameString = (nameString) => {
     return nameString.split(":")[0].replace("#", "");
+  };
+  const getMultipleNumbersFromNameString = (msg) => {
+    if (!msg) return;
+    const pattern = /\d+/g;
+    console.log(msg.match(pattern).join("+"));
+    return msg.match(pattern).join("+");
   };
 
   const removeName = async (name) => {
@@ -18,7 +24,10 @@ export default function StudentList({ curbsideData }) {
       (curbsideName) => curbsideName !== name
     );
 
-    const curbsideNumber = getNumberFromNameString(name);
+    const curbsideNumber =
+      name.split("#").length > 2
+        ? getMultipleNumbersFromNameString(name)
+        : getOneNumberFromNameString(name);
     await axios.patch(
       // `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
       `http://127.0.0.1:3001/${curbsideNumber}`,
