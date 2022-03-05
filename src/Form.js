@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import useWebSocketLite from "./webSocketHook";
+import { debounce } from "./helpers";
 import "./Form.css";
 
 export default function CurbsideNumberForm({ curbsideData }) {
-  const [curbsideNumber, setCurbsideNumber] = useState("");
+  const initialState = {
+    curbsideNumber: "",
+    studentName: "",
+  };
+
+  const [formState, setFormState] = useState(initialState);
+  const [nameMatches, setNameMatches] = useState([]);
+  // const [curbsideNumber, setCurbsideNumber] = useState("");
+  // const [studentName, setStudentName] = useState("");
+  const autoCompleteRef = useRef();
+  const containerRef = useRef();
   const { curbsideNames, setCurbsideNames, usedNumbers, setUsedNumbers } =
     curbsideData;
 
@@ -16,9 +27,34 @@ export default function CurbsideNumberForm({ curbsideData }) {
     setUsedNumbers: setUsedNumbers,
   });
 
+  useEffect(() => {
+    const getPartialMatches = async () => {
+      const currentName = autoCompleteRef.current.value;
+      if (!currentName.length) {
+        setNameMatches([]);
+        containerRef.current.classList.add("hide");
+        return;
+      }
+      const url = `http://127.0.0.1:3001/students/partialNames/${currentName}`;
+      await axios.get(url).then((response) => {
+        setNameMatches((nameMatches) => [...response.data.nameMatches]);
+        containerRef.current.classList.remove("hide");
+      });
+    };
+
+    autoCompleteRef.current.addEventListener(
+      "input",
+      debounce(getPartialMatches)
+    );
+  }, [formState.studentName]);
+
   const handleChange = (evt) => {
-    const { value } = evt.target;
-    setCurbsideNumber(value);
+    const { name, value } = evt.target;
+    // setCurbsideNumber(value);
+    setFormState((formState) => ({
+      ...formState,
+      [name]: value,
+    }));
   };
 
   const getNumFromStudent = (msg) => {
@@ -30,14 +66,8 @@ export default function CurbsideNumberForm({ curbsideData }) {
   const studentIsInList = (number) => {
     if (!curbsideNames.length) return false;
     for (let student of curbsideNames) {
-      // const studentNum = student.split(":")[0].replace("#", "");
       const studentNums = getNumFromStudent(curbsideNames.join(""));
-      console.log(studentNums);
 
-      // if (studentNum === number) {
-      //   console.log("yes");
-      //   return true;
-      // }
       let allNumbers;
       if (number.split("+").length > 1) {
         allNumbers = number.split("+");
@@ -54,22 +84,40 @@ export default function CurbsideNumberForm({ curbsideData }) {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    console.log(studentIsInList(curbsideNumber));
     if (
-      usedNumbers.indexOf(curbsideNumber) === -1 &&
-      !studentIsInList(curbsideNumber)
+      usedNumbers.indexOf(formState.curbsideNumber) === -1 &&
+      !studentIsInList(formState.curbsideNumber)
     ) {
       await axios.patch(
         // `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
-        `http://127.0.0.1:3001/${curbsideNumber}`,
+        `http://127.0.0.1:3001/${formState.curbsideNumber}`,
         {
-          number: curbsideNumber,
+          number: formState.curbsideNumber,
+          studentName: formState.studentName,
         }
       );
 
-      ws.send(`add_${curbsideNumber}`);
+      ws.send(`add_${formState.curbsideNumber}`);
     }
-    setCurbsideNumber("");
+    // setCurbsideNumber("");
+    setFormState(initialState);
+  };
+
+  const handleClick = (evt) => {
+    containerRef.current.classList.toggle("hide");
+    autoCompleteRef.current.value = evt.target.innerText;
+    setFormState((formState) => ({
+      ...formState,
+      studentName: evt.target.innerText,
+    }));
+  };
+
+  const getNamesForAutocomplete = () => {
+    return nameMatches.map((name) => (
+      <div className="autocomplete-name" onClick={handleClick}>
+        {name}
+      </div>
+    ));
   };
 
   return (
@@ -79,11 +127,25 @@ export default function CurbsideNumberForm({ curbsideData }) {
         type="tel"
         placeholder="Enter number here"
         id="curbsideNumber"
-        value={curbsideNumber}
+        value={formState.curbsideNumber}
         onChange={handleChange}
         name="curbsideNumber"
-        required
       />
+      <label htmlFor="studentName">Student name</label>
+      <input
+        ref={autoCompleteRef}
+        type="text"
+        placeholder="Enter name here"
+        id="studentName"
+        value={formState.studentName}
+        onChange={handleChange}
+        name="studentName"
+      />
+      <div className="autocomplete-container hide" ref={containerRef}>
+        <div className="autocomplete">
+          {nameMatches.length && getNamesForAutocomplete()}
+        </div>
+      </div>
       <button className="studentNumber" type="submit">
         Submit
       </button>
