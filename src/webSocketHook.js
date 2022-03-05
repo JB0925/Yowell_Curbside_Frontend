@@ -50,7 +50,6 @@ function useWebSocketLite({
       // receive messages
       ws.onmessage = (event) => {
         const { state, newStudent } = formatMessage(event.data);
-        console.log(newStudent);
         if (newStudent !== "Student not found" && newStudent !== undefined) {
           let num = getNumFromStudent(newStudent);
           setUsedNumbers((usedNumbers) => usedNumbers.concat(num));

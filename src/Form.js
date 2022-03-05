@@ -84,6 +84,15 @@ export default function CurbsideNumberForm({ curbsideData }) {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
+    if (formState.studentName.length) {
+      const url = `http://127.0.0.1:3001/students/fullName/${formState.studentName}`;
+      const response = await axios.get(url);
+      const additionalNumber = getNumFromStudent(response.data.name).join("");
+      if (usedNumbers.indexOf(additionalNumber) !== -1) {
+        setFormState(initialState);
+        return;
+      }
+    }
     if (
       usedNumbers.indexOf(formState.curbsideNumber) === -1 &&
       !studentIsInList(formState.curbsideNumber)
@@ -96,8 +105,14 @@ export default function CurbsideNumberForm({ curbsideData }) {
           studentName: formState.studentName,
         }
       );
-
-      ws.send(`add_${formState.curbsideNumber}`);
+      if (formState.studentName.length) {
+        const url = `http://127.0.0.1:3001/students/fullName/${formState.studentName}`;
+        const response = await axios.get(url);
+        const additionalNumber = response.data.name;
+        ws.send(`add_${formState.curbsideNumber}+${additionalNumber}`);
+      } else {
+        ws.send(`add_${formState.curbsideNumber}`);
+      }
     }
     // setCurbsideNumber("");
     setFormState(initialState);
