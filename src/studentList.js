@@ -40,13 +40,13 @@ export default function StudentList({ curbsideData }) {
 
     await axios.patch(
       // `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
-      `http://127.0.0.1:3001/${curbsideNumber}`,
+      `http://127.0.0.1:3001/students/remove/${curbsideNumber}`,
       {
         number: curbsideNumber,
       }
     );
     setCurbsideNames([...updatedCurbsideNames]);
-    ws.send(`remove_${name}`);
+    // ws.send(`remove_${name}`);
   };
 
   const toggleUlVisibility = () => {

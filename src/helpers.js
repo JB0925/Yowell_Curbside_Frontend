@@ -6,4 +6,17 @@ const debounce = (func) => {
   };
 };
 
-export { debounce };
+const getCorrectNumberToAddStudents = (curbsideNumber, studentName) => {
+  if (!studentName && !curbsideNumber) return;
+  if (!studentName) return curbsideNumber;
+  if (!curbsideNumber) return studentName;
+  if (curbsideNumber.length && studentName.length) {
+    return `${curbsideNumber}+${studentName}`;
+  } else if (curbsideNumber.length && !studentName.length) {
+    return curbsideNumber;
+  } else if (studentName.length && !curbsideNumber.length) {
+    return studentName;
+  } else return;
+};
+
+export { debounce, getCorrectNumberToAddStudents };

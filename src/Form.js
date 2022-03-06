@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import useWebSocketLite from "./webSocketHook";
-import { debounce } from "./helpers";
+import { debounce, getCorrectNumberToAddStudents } from "./helpers";
 import "./Form.css";
 
 export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
@@ -83,11 +82,12 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
   };
 
   const handleSubmit = async (evt) => {
+    let additionalNumber;
     evt.preventDefault();
     if (formState.studentName.length) {
       const url = `http://127.0.0.1:3001/students/fullName/${formState.studentName}`;
       const response = await axios.get(url);
-      const additionalNumber = getNumFromStudent(response.data.name).join("");
+      additionalNumber = getNumFromStudent(response.data.name).join("");
       if (usedNumbers.indexOf(additionalNumber) !== -1) {
         setFormState(initialState);
         return;
@@ -97,14 +97,24 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
       usedNumbers.indexOf(formState.curbsideNumber) === -1 &&
       !studentIsInList(formState.curbsideNumber)
     ) {
-      await axios.patch(
-        // `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
-        `http://127.0.0.1:3001/${formState.curbsideNumber}`,
-        {
-          number: formState.curbsideNumber,
-          studentName: formState.studentName,
-        }
-      );
+      const curbsideNumber = formState.curbsideNumber.length
+        ? formState.curbsideNumber
+        : additionalNumber;
+
+      try {
+        await axios.patch(
+          // `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
+          `http://127.0.0.1:3001/students/add/${curbsideNumber}`,
+          {
+            number: getCorrectNumberToAddStudents(
+              formState.curbsideNumber,
+              additionalNumber
+            ),
+          }
+        );
+      } catch (error) {
+        return;
+      }
       if (formState.studentName.length) {
         const url = `http://127.0.0.1:3001/students/fullName/${formState.studentName}`;
         const response = await axios.get(url);
@@ -114,7 +124,6 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
         sendFunc.send(`add_${formState.curbsideNumber}`);
       }
     }
-    // setCurbsideNumber("");
     setFormState(initialState);
   };
 
