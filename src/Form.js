@@ -4,7 +4,7 @@ import useWebSocketLite from "./webSocketHook";
 import { debounce } from "./helpers";
 import "./Form.css";
 
-export default function CurbsideNumberForm({ curbsideData }) {
+export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
   const initialState = {
     curbsideNumber: "",
     studentName: "",
@@ -19,13 +19,13 @@ export default function CurbsideNumberForm({ curbsideData }) {
   const { curbsideNames, setCurbsideNames, usedNumbers, setUsedNumbers } =
     curbsideData;
 
-  const ws = useWebSocketLite({
-    // socketUrl: "wss://yowell-curbside.herokuapp.com/",
-    socketUrl: "ws://127.0.0.1:3001/",
-    curbsideData: curbsideNames,
-    setCurbsideData: setCurbsideNames,
-    setUsedNumbers: setUsedNumbers,
-  });
+  // const ws = useWebSocketLite({
+  //   // socketUrl: "wss://yowell-curbside.herokuapp.com/",
+  //   socketUrl: "ws://127.0.0.1:3001/",
+  //   curbsideData: curbsideNames,
+  //   setCurbsideData: setCurbsideNames,
+  //   setUsedNumbers: setUsedNumbers,
+  // });
 
   useEffect(() => {
     const getPartialMatches = async () => {
@@ -109,9 +109,9 @@ export default function CurbsideNumberForm({ curbsideData }) {
         const url = `http://127.0.0.1:3001/students/fullName/${formState.studentName}`;
         const response = await axios.get(url);
         const additionalNumber = response.data.name;
-        ws.send(`add_${formState.curbsideNumber}+${additionalNumber}`);
+        sendFunc.send(`add_${formState.curbsideNumber}+${additionalNumber}`);
       } else {
-        ws.send(`add_${formState.curbsideNumber}`);
+        sendFunc.send(`add_${formState.curbsideNumber}`);
       }
     }
     // setCurbsideNumber("");

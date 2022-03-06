@@ -2,12 +2,22 @@ import React, { useRef } from "react";
 import axios from "axios";
 import CurbsideNumberForm from "./Form";
 import Horseshoe from "./horseshoe.png";
+import useWebSocketLite from "./webSocketHook";
 import "./studentList.css";
 
 export default function StudentList({ curbsideData }) {
-  const { curbsideNames, setCurbsideNames } = curbsideData;
+  const { curbsideNames, setCurbsideNames, usedNumbers, setUsedNumbers } =
+    curbsideData;
   const ulRef = useRef();
   const ulTogglerRef = useRef();
+
+  const ws = useWebSocketLite({
+    // socketUrl: "wss://yowell-curbside.herokuapp.com/",
+    socketUrl: "ws://127.0.0.1:3001/",
+    curbsideData: curbsideNames,
+    setCurbsideData: setCurbsideNames,
+    setUsedNumbers: setUsedNumbers,
+  });
 
   const getOneNumberFromNameString = (nameString) => {
     return nameString.split(":")[0].replace("#", "");
@@ -15,7 +25,6 @@ export default function StudentList({ curbsideData }) {
   const getMultipleNumbersFromNameString = (msg) => {
     if (!msg) return;
     const pattern = /\d+/g;
-    console.log(msg.match(pattern).join("+"));
     return msg.match(pattern).join("+");
   };
 
@@ -28,6 +37,7 @@ export default function StudentList({ curbsideData }) {
       name.split("#").length > 2
         ? getMultipleNumbersFromNameString(name)
         : getOneNumberFromNameString(name);
+
     await axios.patch(
       // `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
       `http://127.0.0.1:3001/${curbsideNumber}`,
@@ -36,6 +46,7 @@ export default function StudentList({ curbsideData }) {
       }
     );
     setCurbsideNames([...updatedCurbsideNames]);
+    ws.send(`remove_${name}`);
   };
 
   const toggleUlVisibility = () => {
@@ -61,7 +72,7 @@ export default function StudentList({ curbsideData }) {
       <div className="horseshoe-container">
         <img id="horseshoe" src={Horseshoe} alt="horseshoe" />
       </div>
-      <CurbsideNumberForm curbsideData={curbsideData} />
+      <CurbsideNumberForm curbsideData={curbsideData} sendFunc={ws} />
       <div className="ul-holder">
         <i
           id="showUl"
