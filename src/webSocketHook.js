@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 // the interval between retries
 function useWebSocketLite({
   socketUrl,
+  curbsideData,
   setCurbsideData,
   setUsedNumbers,
   retry: defaultRetry = 3,

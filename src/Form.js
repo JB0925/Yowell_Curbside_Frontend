@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { debounce, getCorrectNumberToAddStudents } from "./helpers";
+import curbsideAPI from "./curbsideAPI";
+import { v4 as uuid } from "uuid";
 import "./Form.css";
 
 export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
@@ -11,8 +13,6 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
 
   const [formState, setFormState] = useState(initialState);
   const [nameMatches, setNameMatches] = useState([]);
-  // const [curbsideNumber, setCurbsideNumber] = useState("");
-  // const [studentName, setStudentName] = useState("");
   const autoCompleteRef = useRef();
   const containerRef = useRef();
   const { curbsideNames, setCurbsideNames, usedNumbers, setUsedNumbers } =
@@ -49,7 +49,6 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
-    // setCurbsideNumber(value);
     setFormState((formState) => ({
       ...formState,
       [name]: value,
@@ -82,13 +81,16 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
   };
 
   const handleSubmit = async (evt) => {
-    let additionalNumber;
+    let numberTakenFromStudentName;
     evt.preventDefault();
     if (formState.studentName.length) {
-      const url = `http://127.0.0.1:3001/students/fullName/${formState.studentName}`;
-      const response = await axios.get(url);
-      additionalNumber = getNumFromStudent(response.data.name).join("");
-      if (usedNumbers.indexOf(additionalNumber) !== -1) {
+      const name = await curbsideAPI.getStudentDataByFullName(
+        formState.studentName
+      );
+
+      numberTakenFromStudentName = getNumFromStudent(name).join("");
+
+      if (usedNumbers.indexOf(numberTakenFromStudentName) !== -1) {
         setFormState(initialState);
         return;
       }
@@ -97,29 +99,21 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
       usedNumbers.indexOf(formState.curbsideNumber) === -1 &&
       !studentIsInList(formState.curbsideNumber)
     ) {
-      const curbsideNumber = formState.curbsideNumber.length
+      const curbsideNumberWithNumberFromStudentName = formState.curbsideNumber
+        .length
         ? formState.curbsideNumber
-        : additionalNumber;
+        : numberTakenFromStudentName;
 
-      try {
-        await axios.patch(
-          // `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
-          `http://127.0.0.1:3001/students/add/${curbsideNumber}`,
-          {
-            number: getCorrectNumberToAddStudents(
-              formState.curbsideNumber,
-              additionalNumber
-            ),
-          }
-        );
-      } catch (error) {
-        return;
-      }
+      await curbsideAPI.addStudentToList(
+        formState.curbsideNumber,
+        curbsideNumberWithNumberFromStudentName,
+        numberTakenFromStudentName
+      );
+
       if (formState.studentName.length) {
-        const url = `http://127.0.0.1:3001/students/fullName/${formState.studentName}`;
-        const response = await axios.get(url);
-        const additionalNumber = response.data.name;
-        sendFunc.send(`add_${formState.curbsideNumber}+${additionalNumber}`);
+        sendFunc.send(
+          `add_${formState.curbsideNumber}+${numberTakenFromStudentName}`
+        );
       } else {
         sendFunc.send(`add_${formState.curbsideNumber}`);
       }
@@ -138,7 +132,7 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
 
   const getNamesForAutocomplete = () => {
     return nameMatches.map((name) => (
-      <div className="autocomplete-name" onClick={handleClick}>
+      <div className="autocomplete-name" onClick={handleClick} key={uuid()}>
         {name}
       </div>
     ));
