@@ -12,7 +12,6 @@ class curbsideAPI {
     try {
       await axios.patch(
         // `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
-        // `http://127.0.0.1:3001/students/add/${curbsideNumberWithNumberFromStudentName}`,
         `${BASE_URL}/students/add/${curbsideNumberWithNumberFromStudentName}`,
         {
           number: getCorrectNumberToAddStudents(
@@ -32,6 +31,15 @@ class curbsideAPI {
         `${BASE_URL}/students/fullName/${studentName}`
       );
       return response.data.name;
+    } catch (error) {
+      return;
+    }
+  }
+
+  static async resetAll() {
+    try {
+      const response = await axios.get(`${BASE_URL}/students/resetAll`);
+      return response.data.message;
     } catch (error) {
       return;
     }

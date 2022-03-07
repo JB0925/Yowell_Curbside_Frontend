@@ -4,6 +4,7 @@ import YESLogo from "./YESLogo2.png";
 import StudentList from "./studentList";
 import "./App.css";
 import AddStudent from "./AddStudent";
+import Routes from "./Routes";
 
 function App() {
   const burgerRef = useRef();
@@ -23,7 +24,6 @@ function App() {
       );
 
       let { loadedStudents } = response.data;
-      console.log(loadedStudents);
       if (loadedStudents.length) {
         let [returnArray, numberArray] = loadedStudents;
         returnArray = returnArray.map((n) => n.info);
@@ -64,11 +64,8 @@ function App() {
           <AddStudent toggleSidebar={toggleSidebar} />
         </div>
       </div>
-      <StudentList
-        // curbsideNames={curbsideNames}
-        // setCurbsideNames={setCurbsideNames}
-        curbsideData={curbsideData}
-      />
+      {/* <StudentList curbsideData={curbsideData} /> */}
+      <Routes curbsideData={curbsideData} />
     </div>
   );
 }
