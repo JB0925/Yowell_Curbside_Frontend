@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getCorrectNumberToAddStudents } from "./helpers";
 
-const BASE_URL = `http://127.0.0.1:3001`;
+const BASE_URL = `https://yowell-curbside.herokuapp.com`;
 
 class curbsideAPI {
   static async addStudentToList(

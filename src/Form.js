@@ -27,7 +27,7 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
         return;
       }
       // const url = `http://127.0.0.1:3001/students/partialNames/${currentName}`;
-      const url = `https://yowell-curbside.herokuapp.com/students/partialNames${currentName}`;
+      const url = `https://yowell-curbside.herokuapp.com/students/partialNames/${currentName}`;
       await axios.get(url).then((response) => {
         setNameMatches((nameMatches) => [...response.data.nameMatches]);
         containerRef.current.classList.remove("hide");
