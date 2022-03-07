@@ -12,8 +12,8 @@ export default function StudentList({ curbsideData }) {
   const ulTogglerRef = useRef();
 
   const ws = useWebSocketLite({
-    // socketUrl: "wss://yowell-curbside.herokuapp.com/",
-    socketUrl: "ws://127.0.0.1:3001/",
+    socketUrl: "wss://yowell-curbside.herokuapp.com/",
+    // socketUrl: "ws://127.0.0.1:3001/",
     curbsideData: curbsideNames,
     setCurbsideData: setCurbsideNames,
     setUsedNumbers: setUsedNumbers,
@@ -39,14 +39,14 @@ export default function StudentList({ curbsideData }) {
         : getOneNumberFromNameString(name);
 
     await axios.patch(
-      // `https://yowell-curbside.herokuapp.com/${curbsideNumber}`,
-      `http://127.0.0.1:3001/students/remove/${curbsideNumber}`,
+      `https://yowell-curbside.herokuapp.com/students/remove${curbsideNumber}`,
+      // `http://127.0.0.1:3001/students/remove/${curbsideNumber}`,
       {
         number: curbsideNumber,
       }
     );
     setCurbsideNames([...updatedCurbsideNames]);
-    // ws.send(`remove_${name}`);
+    ws.send(`remove_${name}`);
   };
 
   const toggleUlVisibility = () => {

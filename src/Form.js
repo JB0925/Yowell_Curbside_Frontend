@@ -18,14 +18,6 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
   const { curbsideNames, setCurbsideNames, usedNumbers, setUsedNumbers } =
     curbsideData;
 
-  // const ws = useWebSocketLite({
-  //   // socketUrl: "wss://yowell-curbside.herokuapp.com/",
-  //   socketUrl: "ws://127.0.0.1:3001/",
-  //   curbsideData: curbsideNames,
-  //   setCurbsideData: setCurbsideNames,
-  //   setUsedNumbers: setUsedNumbers,
-  // });
-
   useEffect(() => {
     const getPartialMatches = async () => {
       const currentName = autoCompleteRef.current.value;
@@ -34,7 +26,8 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
         containerRef.current.classList.add("hide");
         return;
       }
-      const url = `http://127.0.0.1:3001/students/partialNames/${currentName}`;
+      // const url = `http://127.0.0.1:3001/students/partialNames/${currentName}`;
+      const url = `https://yowell-curbside.herokuapp.com/students/partialNames${currentName}`;
       await axios.get(url).then((response) => {
         setNameMatches((nameMatches) => [...response.data.nameMatches]);
         containerRef.current.classList.remove("hide");

@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import YESLogo from "./YESLogo2.png";
-import StudentList from "./studentList";
 import "./App.css";
 import AddStudent from "./AddStudent";
 import Routes from "./Routes";
@@ -19,8 +18,8 @@ function App() {
   useEffect(() => {
     const getLoadedStudents = async () => {
       const response = await axios.get(
-        // "https://yowell-curbside.herokuapp.com/students/status"
-        "http://127.0.0.1:3001/students/status"
+        "https://yowell-curbside.herokuapp.com/students/status"
+        // "http://127.0.0.1:3001/students/status"
       );
 
       let { loadedStudents } = response.data;
@@ -64,7 +63,6 @@ function App() {
           <AddStudent toggleSidebar={toggleSidebar} />
         </div>
       </div>
-      {/* <StudentList curbsideData={curbsideData} /> */}
       <Routes curbsideData={curbsideData} />
     </div>
   );
