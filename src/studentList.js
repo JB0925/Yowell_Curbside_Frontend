@@ -39,7 +39,7 @@ export default function StudentList({ curbsideData }) {
         : getOneNumberFromNameString(name);
 
     await axios.patch(
-      `https://yowell-curbside.herokuapp.com/students/remove${curbsideNumber}`,
+      `https://yowell-curbside.herokuapp.com/students/remove/${curbsideNumber}`,
       // `http://127.0.0.1:3001/students/remove/${curbsideNumber}`,
       {
         number: curbsideNumber,
