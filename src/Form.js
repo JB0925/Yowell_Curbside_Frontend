@@ -38,7 +38,7 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
       "input",
       debounce(getPartialMatches)
     );
-  }, [formState.studentName]);
+  }, []);
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
