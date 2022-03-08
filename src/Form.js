@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { debounce, getCorrectNumberToAddStudents } from "./helpers";
+import { debounce } from "./helpers";
 import curbsideAPI from "./curbsideAPI";
 import { v4 as uuid } from "uuid";
 import "./Form.css";
@@ -15,8 +15,7 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
   const [nameMatches, setNameMatches] = useState([]);
   const autoCompleteRef = useRef();
   const containerRef = useRef();
-  const { curbsideNames, setCurbsideNames, usedNumbers, setUsedNumbers } =
-    curbsideData;
+  const { curbsideNames, usedNumbers } = curbsideData;
 
   useEffect(() => {
     const getPartialMatches = async () => {
@@ -26,7 +25,6 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
         containerRef.current.classList.add("hide");
         return;
       }
-      // const url = `http://127.0.0.1:3001/students/partialNames/${currentName}`;
       const url = `https://yowell-curbside.herokuapp.com/students/partialNames/${currentName}`;
       await axios.get(url).then((response) => {
         setNameMatches((nameMatches) => [...response.data.nameMatches]);
@@ -54,22 +52,21 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
     return msg.match(pattern);
   };
 
-  const studentIsInList = (number) => {
+  const studentIsInNamesList = (number) => {
     if (!curbsideNames.length) return false;
-    for (let student of curbsideNames) {
-      const studentNums = getNumFromStudent(curbsideNames.join(""));
+    const studentNums = getNumFromStudent(curbsideNames.join(""));
 
-      let allNumbers;
-      if (number.split("+").length > 1) {
-        allNumbers = number.split("+");
-        if (allNumbers.some((n) => studentNums.includes(n))) {
-          return true;
-        }
-      }
-      if (studentNums.find((n) => n === number)) {
+    let allNumbers;
+    if (number.split("+").length > 1) {
+      allNumbers = number.split("+");
+      if (allNumbers.some((n) => studentNums.includes(n))) {
         return true;
       }
     }
+    if (studentNums.find((n) => n === number)) {
+      return true;
+    }
+
     return false;
   };
 
@@ -90,7 +87,7 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
     }
     if (
       usedNumbers.indexOf(formState.curbsideNumber) === -1 &&
-      !studentIsInList(formState.curbsideNumber)
+      !studentIsInNamesList(formState.curbsideNumber)
     ) {
       const curbsideNumberWithNumberFromStudentName = formState.curbsideNumber
         .length

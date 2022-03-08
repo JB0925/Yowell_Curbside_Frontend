@@ -1,19 +1,20 @@
 import React, { useRef } from "react";
-import axios from "axios";
 import CurbsideNumberForm from "./Form";
 import Horseshoe from "./horseshoe.png";
 import useWebSocketLite from "./webSocketHook";
 import "./studentList.css";
+import curbsideAPI from "./curbsideAPI";
+import { BASE_SOCKET_URL } from "./baseUrls";
 
 export default function StudentList({ curbsideData }) {
-  const { curbsideNames, setCurbsideNames, usedNumbers, setUsedNumbers } =
-    curbsideData;
+  const { curbsideNames, setCurbsideNames, setUsedNumbers } = curbsideData;
   const ulRef = useRef();
   const ulTogglerRef = useRef();
 
   const ws = useWebSocketLite({
-    socketUrl: "wss://yowell-curbside.herokuapp.com/",
+    // socketUrl: "wss://yowell-curbside.herokuapp.com/",
     // socketUrl: "ws://127.0.0.1:3001/",
+    socketUrl: BASE_SOCKET_URL,
     curbsideData: curbsideNames,
     setCurbsideData: setCurbsideNames,
     setUsedNumbers: setUsedNumbers,
@@ -38,13 +39,7 @@ export default function StudentList({ curbsideData }) {
         ? getMultipleNumbersFromNameString(name)
         : getOneNumberFromNameString(name);
 
-    await axios.patch(
-      `https://yowell-curbside.herokuapp.com/students/remove/${curbsideNumber}`,
-      // `http://127.0.0.1:3001/students/remove/${curbsideNumber}`,
-      {
-        number: curbsideNumber,
-      }
-    );
+    await curbsideAPI.removeStudentFromList(curbsideNumber);
     setCurbsideNames([...updatedCurbsideNames]);
     ws.send(`remove_${name}`);
   };

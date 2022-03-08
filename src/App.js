@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from "react";
-import axios from "axios";
 import YESLogo from "./YESLogo2.png";
 import "./App.css";
 import AddStudent from "./AddStudent";
 import Routes from "./Routes";
+import curbsideAPI from "./curbsideAPI";
 
 function App() {
   const burgerRef = useRef();
@@ -17,17 +17,13 @@ function App() {
   const [usedNumbers, setUsedNumbers] = useState([]);
   useEffect(() => {
     const getLoadedStudents = async () => {
-      const response = await axios.get(
-        "https://yowell-curbside.herokuapp.com/students/status"
-        // "http://127.0.0.1:3001/students/status"
-      );
-
+      const response = await curbsideAPI.getStatusOfCurrentlyLoadedStudents();
       let { loadedStudents } = response.data;
       if (loadedStudents.length) {
-        let [returnArray, numberArray] = loadedStudents;
-        returnArray = returnArray.map((n) => n.info);
-        setCurbsideNames((curbsideNames) => [...returnArray]);
-        setUsedNumbers((usedNumbers) => [...numberArray]);
+        let [studentNamesArray, studentNumbersArray] = loadedStudents;
+        studentNamesArray = studentNamesArray.map((n) => n.info);
+        setCurbsideNames((curbsideNames) => [...studentNamesArray]);
+        setUsedNumbers((usedNumbers) => [...studentNumbersArray]);
       }
     };
 
