@@ -15,6 +15,7 @@ function App() {
 
   const [curbsideNames, setCurbsideNames] = useState([]);
   const [usedNumbers, setUsedNumbers] = useState([]);
+
   useEffect(() => {
     const getLoadedStudents = async () => {
       const response = await curbsideAPI.getStatusOfCurrentlyLoadedStudents();

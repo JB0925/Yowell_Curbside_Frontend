@@ -12,8 +12,6 @@ export default function StudentList({ curbsideData }) {
   const ulTogglerRef = useRef();
 
   const ws = useWebSocketLite({
-    // socketUrl: "wss://yowell-curbside.herokuapp.com/",
-    // socketUrl: "ws://127.0.0.1:3001/",
     socketUrl: BASE_SOCKET_URL,
     curbsideData: curbsideNames,
     setCurbsideData: setCurbsideNames,
