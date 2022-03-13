@@ -53,6 +53,7 @@ export default function StudentList({ curbsideData }) {
         <li>{name}</li>
         <i
           id="remove"
+          data-testid="removeBtn"
           className="fa-solid fa-x"
           onClick={() => removeName(name)}
         ></i>
