@@ -1,10 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { BASE_URL } from "./baseUrls";
 import "./addStudent.css";
 
 export default function AddStudent({ toggleSidebar }) {
-  const BASE_URL =
-    "https://yowell-curbside.herokuapp.com/" || "http://127.0.0.1:3001";
   const initialState = {
     number: "",
     name: "",
@@ -33,11 +32,10 @@ export default function AddStudent({ toggleSidebar }) {
 
   const giveUserFeedback = () => {
     if (!userFeedback.length) return;
-    if (userFeedback === "Student added successfully!") {
-      return <p className="success">{userFeedback}</p>;
-    }
+    const classNameToAdd =
+      userFeedback === "Student added successfully!" ? "success" : "error";
 
-    return <p className="error">{userFeedback}</p>;
+    return <p className={classNameToAdd}>{userFeedback}</p>;
   };
 
   return (
