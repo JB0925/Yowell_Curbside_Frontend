@@ -33,6 +33,23 @@ class curbsideAPI {
     }
   }
 
+  static async getStudentsByPartialName(
+    partialName,
+    setListOfNames,
+    autocompleteContainerRef
+  ) {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/students/partialNames/${partialName}`
+      );
+      setListOfNames((listOfNames) => [...response.data.nameMatches]);
+      autocompleteContainerRef.current.classList.remove("hide");
+    } catch (error) {
+      setListOfNames((listOfNames) => []);
+      autocompleteContainerRef.current.classList.add("hide");
+    }
+  }
+
   static async getStudentDataByFullName(studentName) {
     try {
       const response = await axios.get(

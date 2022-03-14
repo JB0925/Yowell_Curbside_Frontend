@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { debounce } from "./helpers";
 import curbsideAPI from "./curbsideAPI";
+import { BASE_URL } from "./baseUrls";
 import { v4 as uuid } from "uuid";
 import "./Form.css";
 
@@ -25,11 +26,12 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
         containerRef.current.classList.add("hide");
         return;
       }
-      const url = `https://yowell-curbside.herokuapp.com/students/partialNames/${currentName}`;
-      await axios.get(url).then((response) => {
-        setNameMatches((nameMatches) => [...response.data.nameMatches]);
-        containerRef.current.classList.remove("hide");
-      });
+
+      await curbsideAPI.getStudentsByPartialName(
+        currentName,
+        setNameMatches,
+        containerRef
+      );
     };
 
     autoCompleteRef.current.addEventListener(
