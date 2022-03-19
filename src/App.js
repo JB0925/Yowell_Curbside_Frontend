@@ -4,13 +4,33 @@ import "./App.css";
 import AddStudent from "./AddStudent";
 import Routes from "./Routes";
 import curbsideAPI from "./curbsideAPI";
+import StudentNoNumberForm from "./StudentNoNumber";
 
 function App() {
   const burgerRef = useRef();
   const sidebarRef = useRef();
+  const formRef = useRef();
 
   const toggleSidebar = () => {
     sidebarRef.current.classList.toggle("open");
+  };
+
+  const toggleForm = () => {
+    const current = formRef.current;
+    console.log(current.children);
+    if (current.classList.contains("grow")) {
+      current.classList.remove("grow");
+      // current.children.forEach((child) => (child.style.display = "none"));
+      for (let child of current.children) {
+        child.children[0].style.display = "none";
+      }
+    } else {
+      current.classList.add("grow");
+      // current.children.forEach((child) => (child.style.display = "block"));
+      for (let child of current.children) {
+        child.children[0].style.display = "flex";
+      }
+    }
   };
 
   const [curbsideNames, setCurbsideNames] = useState([]);
@@ -42,7 +62,9 @@ function App() {
     <div className="App">
       <nav>
         <img src={YESLogo} alt="school logo" />
-        <h1 id="header">YES Curbside!</h1>
+        <h1 id="header" onClick={toggleForm}>
+          YES Curbside!
+        </h1>
         <i
           id="burgerMenu"
           className="fa-solid fa-bars"
@@ -50,6 +72,14 @@ function App() {
           onClick={toggleSidebar}
         ></i>
       </nav>
+      <div className="noNumber-container" ref={formRef}>
+        <div className="wrapper">
+          <StudentNoNumberForm
+            curbsideData={curbsideData}
+            toggleFunc={toggleForm}
+          />
+        </div>
+      </div>
       <div className="sidebar-container" ref={sidebarRef}>
         <div className="sidebar">
           <i

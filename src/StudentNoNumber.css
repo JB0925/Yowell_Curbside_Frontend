@@ -1,0 +1,73 @@
+.StudentNoNumber {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 60%;
+  margin-top: 25px;
+  /* position: absolute; */
+  /* top: 100%;
+  left: 0; */
+  /* border: 1px solid lime; */
+  padding: 0;
+}
+
+.StudentNoNumber form {
+  height: 100%;
+  border: none;
+  z-index: 0;
+  width: 70%;
+  flex-direction: row;
+  padding: 10px;
+}
+
+.label-input {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+input {
+  border-radius: 5px;
+  width: 80%;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+
+label {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.StudentNoNumber button {
+  /* margin-top: 20px;
+  margin-right: 100px; */
+  position: absolute;
+  top: 80%;
+  left: 63%;
+  padding: 5px;
+}
+
+@media screen and (max-width: 900px) {
+  .StudentNoNumber form {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .StudentNoNumber button {
+    left: 70%;
+    top: 78%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .StudentNoNumber form label {
+    font-size: 1rem;
+  }
+
+  .StudentNoNumber button {
+    top: 77%;
+    left: 70%;
+  }
+}
