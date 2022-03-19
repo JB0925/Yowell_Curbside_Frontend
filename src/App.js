@@ -17,16 +17,14 @@ function App() {
 
   const toggleForm = () => {
     const current = formRef.current;
-    console.log(current.children);
+
     if (current.classList.contains("grow")) {
       current.classList.remove("grow");
-      // current.children.forEach((child) => (child.style.display = "none"));
       for (let child of current.children) {
         child.children[0].style.display = "none";
       }
     } else {
       current.classList.add("grow");
-      // current.children.forEach((child) => (child.style.display = "block"));
       for (let child of current.children) {
         child.children[0].style.display = "flex";
       }
