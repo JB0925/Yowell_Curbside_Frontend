@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
 import { debounce } from "./helpers";
 import curbsideAPI from "./curbsideAPI";
-import { BASE_URL } from "./baseUrls";
 import { v4 as uuid } from "uuid";
 import "./Form.css";
 
@@ -73,42 +71,43 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
   };
 
   const handleSubmit = async (evt) => {
-    let numberTakenFromStudentName;
     evt.preventDefault();
-    if (formState.studentName.length) {
-      const name = await curbsideAPI.getStudentDataByFullName(
-        formState.studentName
-      );
+    // if (formState.studentName.length) {
+    //   const name = await curbsideAPI.getStudentDataByFullName(
+    //     formState.studentName
+    //   );
 
-      numberTakenFromStudentName = getNumFromStudent(name).join("");
+    //   numberTakenFromStudentName = getNumFromStudent(name).join("");
 
-      if (usedNumbers.indexOf(numberTakenFromStudentName) !== -1) {
-        setFormState(initialState);
-        return;
-      }
-    }
+    //   if (usedNumbers.indexOf(numberTakenFromStudentName) !== -1) {
+    //     setFormState(initialState);
+    //     return;
+    //   }
+    // }
     if (
       usedNumbers.indexOf(formState.curbsideNumber) === -1 &&
       !studentIsInNamesList(formState.curbsideNumber)
     ) {
-      const curbsideNumberWithNumberFromStudentName = formState.curbsideNumber
-        .length
-        ? formState.curbsideNumber
-        : numberTakenFromStudentName;
+      // const curbsideNumberWithNumberFromStudentName = formState.curbsideNumber
+      //   .length
+      //   ? formState.curbsideNumber
+      //   : numberTakenFromStudentName;
 
-      await curbsideAPI.addStudentToList(
+      const numberString = await curbsideAPI.addStudentToList(
         formState.curbsideNumber,
-        curbsideNumberWithNumberFromStudentName,
-        numberTakenFromStudentName
+        formState.studentName
+        // curbsideNumberWithNumberFromStudentName,
+        // numberTakenFromStudentName
       );
-
-      if (formState.studentName.length) {
-        sendFunc.send(
-          `add_${formState.curbsideNumber}+${numberTakenFromStudentName}`
-        );
-      } else {
-        sendFunc.send(`add_${formState.curbsideNumber}`);
-      }
+      console.log(`NumberString: ${numberString}`);
+      sendFunc.send(`add_${numberString}`);
+      // if (formState.studentName.length) {
+      //   sendFunc.send(
+      //     `add_${formState.curbsideNumber}+${numberTakenFromStudentName}`
+      //   );
+      // } else {
+      //   sendFunc.send(`add_${formState.curbsideNumber}`);
+      // }
     }
     setFormState(initialState);
   };
@@ -130,8 +129,18 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
     ));
   };
 
+  const closeAutocomplete = () => {
+    if (!containerRef.current.classList.contains("hide")) {
+      containerRef.current.classList.add("hide");
+      setFormState((formState) => ({
+        ...formState,
+        studentName: "",
+      }));
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} onClick={closeAutocomplete}>
       <label htmlFor="curbsideNumber">Curbside number</label>
       <input
         type="tel"
