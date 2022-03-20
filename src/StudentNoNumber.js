@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import curbsideAPI from "./curbsideAPI";
 import "./StudentNoNumber.css";
 
 export default function StudentNoNumberForm({
@@ -12,10 +13,12 @@ export default function StudentNoNumberForm({
     setStudentName((studentName) => evt.target.value);
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
-    setStudentName((studentName) => "");
     toggleFunc();
+    await curbsideAPI.addStudentWithNoNumberToList(studentName);
+    sendFunc.send(`add_${studentName}`);
+    setStudentName((studentName) => "");
     return;
   };
 

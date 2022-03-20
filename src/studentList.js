@@ -1,22 +1,22 @@
 import React, { useRef } from "react";
 import CurbsideNumberForm from "./Form";
 import Horseshoe from "./horseshoe.png";
-import useWebSocketLite from "./webSocketHook";
+// import useWebSocketLite from "./webSocketHook";
 import "./studentList.css";
 import curbsideAPI from "./curbsideAPI";
-import { BASE_SOCKET_URL } from "./baseUrls";
+// import { BASE_SOCKET_URL } from "./baseUrls";
 
-export default function StudentList({ curbsideData }) {
-  const { curbsideNames, setCurbsideNames, setUsedNumbers } = curbsideData;
+export default function StudentList({ curbsideData, sendFunc }) {
+  const { curbsideNames, setCurbsideNames } = curbsideData;
   const ulRef = useRef();
   const ulTogglerRef = useRef();
 
-  const ws = useWebSocketLite({
-    socketUrl: BASE_SOCKET_URL,
-    curbsideData: curbsideNames,
-    setCurbsideData: setCurbsideNames,
-    setUsedNumbers: setUsedNumbers,
-  });
+  // const ws = useWebSocketLite({
+  //   socketUrl: BASE_SOCKET_URL,
+  //   curbsideData: curbsideNames,
+  //   setCurbsideData: setCurbsideNames,
+  //   setUsedNumbers: setUsedNumbers,
+  // });
 
   const getOneNumberFromNameString = (nameString) => {
     return nameString.split(":")[0].replace("#", "");
@@ -32,6 +32,26 @@ export default function StudentList({ curbsideData }) {
       (curbsideName) => curbsideName !== name
     );
 
+    const pattern = /\d+/g;
+    if (
+      (name.match(pattern) &&
+        name.match(pattern).length === 1 &&
+        parseInt(name.match(pattern)[0]) >= 500) ||
+      !name.match(pattern)
+    ) {
+      await curbsideAPI.removeStudentWithNoNumberFromList(name);
+      setCurbsideNames([...updatedCurbsideNames]);
+      sendFunc.send(`remove_${name}`);
+      return;
+    }
+
+    // if (!name.match(pattern)) {
+    //   await curbsideAPI.removeStudentWithNoNumberFromList(name);
+    //   setCurbsideNames([...updatedCurbsideNames]);
+    //   sendFunc.send(`remove_${name}`);
+    //   return;
+    // }
+
     const curbsideNumber =
       name.split("#").length > 2
         ? getMultipleNumbersFromNameString(name)
@@ -39,7 +59,7 @@ export default function StudentList({ curbsideData }) {
 
     await curbsideAPI.removeStudentFromList(curbsideNumber);
     setCurbsideNames([...updatedCurbsideNames]);
-    ws.send(`remove_${name}`);
+    sendFunc.send(`remove_${name}`);
   };
 
   const toggleUlVisibility = () => {
@@ -66,7 +86,7 @@ export default function StudentList({ curbsideData }) {
       <div className="horseshoe-container">
         <img id="horseshoe" src={Horseshoe} alt="horseshoe" />
       </div>
-      <CurbsideNumberForm curbsideData={curbsideData} sendFunc={ws} />
+      <CurbsideNumberForm curbsideData={curbsideData} sendFunc={sendFunc} />
       <div className="ul-holder">
         <i
           id="showUl"

@@ -5,11 +5,23 @@ import AddStudent from "./AddStudent";
 import Routes from "./Routes";
 import curbsideAPI from "./curbsideAPI";
 import StudentNoNumberForm from "./StudentNoNumber";
+import { BASE_SOCKET_URL } from "./baseUrls";
+import useWebSocketLite from "./webSocketHook";
 
 function App() {
   const burgerRef = useRef();
   const sidebarRef = useRef();
   const formRef = useRef();
+
+  const [curbsideNames, setCurbsideNames] = useState([]);
+  const [usedNumbers, setUsedNumbers] = useState([]);
+
+  const ws = useWebSocketLite({
+    socketUrl: BASE_SOCKET_URL,
+    curbsideData: curbsideNames,
+    setCurbsideData: setCurbsideNames,
+    setUsedNumbers: setUsedNumbers,
+  });
 
   const toggleSidebar = () => {
     sidebarRef.current.classList.toggle("open");
@@ -31,8 +43,8 @@ function App() {
     }
   };
 
-  const [curbsideNames, setCurbsideNames] = useState([]);
-  const [usedNumbers, setUsedNumbers] = useState([]);
+  // const [curbsideNames, setCurbsideNames] = useState([]);
+  // const [usedNumbers, setUsedNumbers] = useState([]);
 
   useEffect(() => {
     const getLoadedStudents = async () => {
@@ -75,6 +87,7 @@ function App() {
           <StudentNoNumberForm
             curbsideData={curbsideData}
             toggleFunc={toggleForm}
+            sendFunc={ws}
           />
         </div>
       </div>
@@ -88,7 +101,7 @@ function App() {
           <AddStudent toggleSidebar={toggleSidebar} />
         </div>
       </div>
-      <Routes curbsideData={curbsideData} />
+      <Routes curbsideData={curbsideData} sendFunc={ws} />
     </div>
   );
 }

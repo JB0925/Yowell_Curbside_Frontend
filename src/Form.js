@@ -54,18 +54,31 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
 
   const studentIsInNamesList = (number) => {
     if (!curbsideNames.length) return false;
-    const studentNums = getNumFromStudent(curbsideNames.join(""));
 
-    let allNumbers;
-    if (number.split("+").length > 1) {
-      allNumbers = number.split("+");
-      if (allNumbers.some((n) => studentNums.includes(n))) {
-        return true;
-      }
-    }
+    const studentNums = getNumFromStudent(curbsideNames.join(""));
+    if (!studentNums) return false;
+
     if (studentNums.find((n) => n === number)) {
       return true;
     }
+
+    let allNumbers = number.split("+");
+    if (
+      allNumbers.length > 1 &&
+      allNumbers.some((n) => studentNums.includes(n))
+    ) {
+      return true;
+    }
+    // let allNumbers;
+    // if (number.split("+").length > 1) {
+    //   allNumbers = number.split("+");
+    //   if (allNumbers.some((n) => studentNums.includes(n))) {
+    //     return true;
+    //   }
+    // }
+    // if (studentNums.find((n) => n === number)) {
+    //   return true;
+    // }
 
     return false;
   };
@@ -99,6 +112,10 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
         // curbsideNumberWithNumberFromStudentName,
         // numberTakenFromStudentName
       );
+      if (numberString === undefined) {
+        setFormState(initialState);
+        return;
+      }
       console.log(`NumberString: ${numberString}`);
       sendFunc.send(`add_${numberString}`);
       // if (formState.studentName.length) {

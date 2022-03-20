@@ -75,6 +75,33 @@ class curbsideAPI {
     }
   }
 
+  static async addStudentWithNoNumberToList(studentName) {
+    try {
+      const data = { studentToAdd: studentName };
+      const response = await axios.post(
+        `${BASE_URL}/students/add/noNumber`,
+        data
+      );
+      return response.data.student;
+    } catch (error) {
+      return;
+    }
+  }
+
+  static async removeStudentWithNoNumberFromList(studentName) {
+    try {
+      const newStudentName = studentName.split(": ").pop();
+      const data = { studentToRemove: newStudentName };
+      const response = await axios.patch(
+        `${BASE_URL}/students/remove/noNumber`,
+        data
+      );
+      return response.data.message;
+    } catch (error) {
+      return;
+    }
+  }
+
   static async resetAll() {
     try {
       const response = await axios.get(`${BASE_URL}/students/resetAll`);

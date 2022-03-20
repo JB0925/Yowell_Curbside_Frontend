@@ -51,6 +51,21 @@ function useWebSocketLite({
       // receive messages
       ws.onmessage = (event) => {
         const { state, newStudent } = formatMessage(event.data);
+        console.log(`Frontend Websocket handler: newStudent = ${newStudent}`);
+        if (newStudent === undefined) return;
+
+        if (!getNumFromStudent(newStudent)) {
+          if (state === "add" && newStudent) {
+            setCurbsideData((curbsideData) => [...curbsideData, newStudent]);
+            return;
+          } else {
+            setCurbsideData((curbsideData) => [
+              ...curbsideData.filter((name) => name !== newStudent),
+            ]);
+            return;
+          }
+        }
+
         if (newStudent !== "Student not found" && newStudent !== undefined) {
           let num = getNumFromStudent(newStudent);
           setUsedNumbers((usedNumbers) => usedNumbers.concat(num));
