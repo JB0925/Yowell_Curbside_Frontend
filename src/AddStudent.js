@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BASE_URL } from "./baseUrls";
 import "./addStudent.css";
 
@@ -11,6 +11,23 @@ export default function AddStudent({ toggleSidebar }) {
 
   const [studentData, setStudentData] = useState(initialState);
   const [userFeedback, setUserFeedback] = useState("");
+  const [nextNumber, setNextNumber] = useState(null);
+
+  useEffect(() => {
+    const getNextNumberToAdd = async () => {
+      const response = await axios.get(`${BASE_URL}/students/studentList`);
+      const { studentList } = response.data;
+      let nextNumberUp =
+        studentList
+          .map((student) => parseInt(student.number))
+          .filter((n) => n < 400)
+          .pop() + 1;
+
+      setNextNumber((n) => nextNumberUp);
+    };
+
+    getNextNumberToAdd();
+  }, []);
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -25,6 +42,9 @@ export default function AddStudent({ toggleSidebar }) {
     axios
       .post(BASE_URL, studentData)
       .then(() => setUserFeedback("Student added successfully!"))
+      .then(() => {
+        if (nextNumber) setNextNumber(nextNumber + 1);
+      })
       .catch(() => setUserFeedback("An error occurred."));
     setStudentData(initialState);
     setTimeout(() => toggleSidebar(), 1000);
@@ -40,7 +60,9 @@ export default function AddStudent({ toggleSidebar }) {
 
   return (
     <div className="addStudent">
-      <p>Add a Student</p>
+      <p className="nextUp">
+        Add a Student - Next Number: {nextNumber === null ? null : nextNumber}
+      </p>
       <form onSubmit={handleSubmit} id="addStudentForm">
         <label htmlFor="number">Curbside number</label>
         <input

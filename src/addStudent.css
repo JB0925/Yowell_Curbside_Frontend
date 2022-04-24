@@ -50,3 +50,21 @@ button {
   border: 1px solid dodgerblue;
   border-radius: 5px;
 }
+
+@media screen and (max-width: 500px) {
+  .nextUp {
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .nextUp {
+    font-size: 0.7rem;
+  }
+}
+
+@media screen and (max-width: 280px) {
+  .nextUp {
+    font-size: 0.5rem;
+  }
+}
