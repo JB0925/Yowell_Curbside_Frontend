@@ -29,10 +29,12 @@ export default function MainList() {
 
   const getNextNumberToAdd = () => {
     if (!everyStudent.length) return;
-    const numbersLessThanFourHundred = everyStudent.map(
-      (student) => parseInt(student.number) < 400
+    return (
+      everyStudent
+        .map((student) => parseInt(student.number))
+        .filter((n) => n < 400)
+        .pop() + 1
     );
-    return numbersLessThanFourHundred[numbersLessThanFourHundred.length - 1];
   };
 
   return (
