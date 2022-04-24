@@ -9,9 +9,7 @@ export default function MainList() {
 
   useEffect(() => {
     const getEveryStudent = async () => {
-      const response = await axios.get(
-        `http://localhost:3001/students/studentList`
-      );
+      const response = await axios.get(`${BASE_URL}/students/studentList`);
       const { studentList } = response.data;
       setEveryStudent((everyStudent) => [...studentList]);
     };
