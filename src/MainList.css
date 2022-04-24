@@ -1,6 +1,12 @@
 .allStudentsContainer {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 3%;
 }
 
 .nextNumber {
@@ -8,11 +14,18 @@
   align-self: center;
 }
 
+.studentListContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
 .allStudents {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
-  margin-left: 175px;
+  max-width: 300px;
 }
 
 .allStudents p {

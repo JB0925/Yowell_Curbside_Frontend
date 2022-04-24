@@ -19,12 +19,14 @@ export default function MainList() {
 
   const displayAllStudents = () => {
     if (!everyStudent.length) return;
-    return everyStudent.map(({ number, name }) => (
+    const studentList = everyStudent.map(({ number, name }) => (
       <div className="allStudents" key={uuid()}>
         <p>{number}</p>
         <p>{name}</p>
       </div>
     ));
+
+    return <div className="studentListContainer">{studentList}</div>;
   };
 
   const getNextNumberToAdd = () => {
