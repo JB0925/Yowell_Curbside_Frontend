@@ -1,6 +1,5 @@
 html {
   box-sizing: border-box;
-  background-color: "#0c162e";
 }
 
 img {
@@ -16,6 +15,7 @@ img {
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
   background-color: #0c162e;
   font-family: "Raleway", sans-serif;
   color: white;
