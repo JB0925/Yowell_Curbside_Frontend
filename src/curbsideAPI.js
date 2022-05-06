@@ -1,27 +1,17 @@
 import axios from "axios";
-import { getCorrectNumberToAddStudents } from "./helpers";
 import { BASE_URL } from "./baseUrls";
 
 class curbsideAPI {
-  static async addStudentToList(
-    curbsideNumber,
-    curbsideName
-    // curbsideNumberWithNumberFromStudentName,
-    // additionalNumber
-  ) {
+  static async addStudentToList(curbsideNumber, curbsideName) {
     try {
       const response = await axios.patch(
         `${BASE_URL}/students/add/${curbsideNumber || curbsideName}`,
         {
-          // number: getCorrectNumberToAddStudents(
-          //   curbsideNumber,
-          //   additionalNumber
-          // ),
           number: curbsideNumber,
           studentName: curbsideName,
         }
       );
-      console.log(response.data.status);
+
       return response.data.status;
     } catch (error) {
       return;
