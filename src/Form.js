@@ -124,6 +124,7 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
   const formStyle = {
     backgroundColor: isChecked ? "rgba(12, 22, 46, 1)" : "",
     color: isChecked ? "white" : "",
+    border: isChecked ? "1px solid white" : "",
   };
 
   return (

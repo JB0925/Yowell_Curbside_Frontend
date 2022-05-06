@@ -118,7 +118,7 @@ function App() {
             className="fas fa-window-close"
             onClick={toggleSidebar}
           ></i>
-          <AddStudent toggleSidebar={toggleSidebar} />
+          <AddStudent toggleSidebar={toggleSidebar} isChecked={isChecked} />
         </div>
       </div>
       <Routes curbsideData={curbsideData} sendFunc={ws} />

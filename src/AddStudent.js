@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { BASE_URL } from "./baseUrls";
 import "./addStudent.css";
 
-export default function AddStudent({ toggleSidebar }) {
+export default function AddStudent({ toggleSidebar, isChecked }) {
   const initialState = {
     number: "",
     name: "",
@@ -58,12 +58,16 @@ export default function AddStudent({ toggleSidebar }) {
     return <p className={classNameToAdd}>{userFeedback}</p>;
   };
 
+  const formStyle = {
+    border: isChecked ? "1px solid #0c162e" : "",
+  };
+
   return (
     <div className="addStudent">
       <p className="nextUp">
         Add a Student - Next Number: {nextNumber === null ? null : nextNumber}
       </p>
-      <form onSubmit={handleSubmit} id="addStudentForm">
+      <form onSubmit={handleSubmit} id="addStudentForm" style={formStyle}>
         <label htmlFor="number">Curbside number</label>
         <input
           type="text"
