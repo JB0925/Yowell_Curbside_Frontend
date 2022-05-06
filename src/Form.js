@@ -14,7 +14,7 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
   const [nameMatches, setNameMatches] = useState([]);
   const autoCompleteRef = useRef();
   const containerRef = useRef();
-  const { curbsideNames, usedNumbers } = curbsideData;
+  const { curbsideNames, usedNumbers, isChecked } = curbsideData;
 
   useEffect(() => {
     const getPartialMatches = async () => {
@@ -69,48 +69,20 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
     ) {
       return true;
     }
-    // let allNumbers;
-    // if (number.split("+").length > 1) {
-    //   allNumbers = number.split("+");
-    //   if (allNumbers.some((n) => studentNums.includes(n))) {
-    //     return true;
-    //   }
-    // }
-    // if (studentNums.find((n) => n === number)) {
-    //   return true;
-    // }
 
     return false;
   };
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    // if (formState.studentName.length) {
-    //   const name = await curbsideAPI.getStudentDataByFullName(
-    //     formState.studentName
-    //   );
 
-    //   numberTakenFromStudentName = getNumFromStudent(name).join("");
-
-    //   if (usedNumbers.indexOf(numberTakenFromStudentName) !== -1) {
-    //     setFormState(initialState);
-    //     return;
-    //   }
-    // }
     if (
       usedNumbers.indexOf(formState.curbsideNumber) === -1 &&
       !studentIsInNamesList(formState.curbsideNumber)
     ) {
-      // const curbsideNumberWithNumberFromStudentName = formState.curbsideNumber
-      //   .length
-      //   ? formState.curbsideNumber
-      //   : numberTakenFromStudentName;
-
       const numberString = await curbsideAPI.addStudentToList(
         formState.curbsideNumber,
         formState.studentName
-        // curbsideNumberWithNumberFromStudentName,
-        // numberTakenFromStudentName
       );
       if (numberString === undefined) {
         setFormState(initialState);
@@ -118,13 +90,6 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
       }
       console.log(`NumberString: ${numberString}`);
       sendFunc.send(`add_${numberString}`);
-      // if (formState.studentName.length) {
-      //   sendFunc.send(
-      //     `add_${formState.curbsideNumber}+${numberTakenFromStudentName}`
-      //   );
-      // } else {
-      //   sendFunc.send(`add_${formState.curbsideNumber}`);
-      // }
     }
     setFormState(initialState);
   };
@@ -156,8 +121,13 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
     }
   };
 
+  const formStyle = {
+    backgroundColor: isChecked ? "rgba(12, 22, 46, 1)" : "",
+    color: isChecked ? "white" : "",
+  };
+
   return (
-    <form onSubmit={handleSubmit} onClick={closeAutocomplete}>
+    <form onSubmit={handleSubmit} onClick={closeAutocomplete} style={formStyle}>
       <label htmlFor="curbsideNumber">Curbside number</label>
       <input
         type="tel"

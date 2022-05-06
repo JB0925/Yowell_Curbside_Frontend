@@ -1,22 +1,14 @@
 import React, { useRef } from "react";
 import CurbsideNumberForm from "./Form";
 import Horseshoe from "./horseshoe.png";
-// import useWebSocketLite from "./webSocketHook";
+import Horse from "./darkerHorseshoe.jpg";
 import "./studentList.css";
 import curbsideAPI from "./curbsideAPI";
-// import { BASE_SOCKET_URL } from "./baseUrls";
 
 export default function StudentList({ curbsideData, sendFunc }) {
-  const { curbsideNames, setCurbsideNames } = curbsideData;
+  const { curbsideNames, setCurbsideNames, isChecked } = curbsideData;
   const ulRef = useRef();
   const ulTogglerRef = useRef();
-
-  // const ws = useWebSocketLite({
-  //   socketUrl: BASE_SOCKET_URL,
-  //   curbsideData: curbsideNames,
-  //   setCurbsideData: setCurbsideNames,
-  //   setUsedNumbers: setUsedNumbers,
-  // });
 
   const getOneNumberFromNameString = (nameString) => {
     return nameString.split(":")[0].replace("#", "");
@@ -45,13 +37,6 @@ export default function StudentList({ curbsideData, sendFunc }) {
       return;
     }
 
-    // if (!name.match(pattern)) {
-    //   await curbsideAPI.removeStudentWithNoNumberFromList(name);
-    //   setCurbsideNames([...updatedCurbsideNames]);
-    //   sendFunc.send(`remove_${name}`);
-    //   return;
-    // }
-
     const curbsideNumber =
       name.split("#").length > 2
         ? getMultipleNumbersFromNameString(name)
@@ -67,9 +52,20 @@ export default function StudentList({ curbsideData, sendFunc }) {
     ulTogglerRef.current.classList.toggle("fa-angle-up");
   };
 
+  const toggleStudentDivStyle = {
+    color: "white",
+    backgroundColor: isChecked ? "#0c162e" : "",
+    border: isChecked ? "1px solid red" : "",
+  };
+
+  const imageStyle = {
+    width: isChecked ? "45%" : "",
+    height: isChecked ? "45%" : "",
+  };
+
   const studentsInQueue = () => {
     return curbsideNames.map((name) => (
-      <div className="listItem" key={name}>
+      <div className="listItem" key={name} style={toggleStudentDivStyle}>
         <li>{name}</li>
         <i
           id="remove"
@@ -84,7 +80,12 @@ export default function StudentList({ curbsideData, sendFunc }) {
   return (
     <div className="StudentList">
       <div className="horseshoe-container">
-        <img id="horseshoe" src={Horseshoe} alt="horseshoe" />
+        <img
+          style={imageStyle}
+          id="horseshoe"
+          src={isChecked ? Horse : Horseshoe}
+          alt="horseshoe"
+        />
       </div>
       <CurbsideNumberForm curbsideData={curbsideData} sendFunc={sendFunc} />
       <div className="ul-holder">
