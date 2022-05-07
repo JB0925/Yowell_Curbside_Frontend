@@ -122,9 +122,16 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
   };
 
   const formStyle = {
-    backgroundColor: isChecked ? "rgba(12, 22, 46, 1)" : "",
-    color: isChecked ? "white" : "",
-    border: isChecked ? "1px solid white" : "",
+    backgroundColor:
+      isChecked || localStorage.getItem("isChecked") === "true"
+        ? "rgba(12, 22, 46, 1)"
+        : "",
+    color:
+      isChecked || localStorage.getItem("isChecked") === "true" ? "white" : "",
+    border:
+      isChecked || localStorage.getItem("isChecked") === "true"
+        ? "1px solid white"
+        : "",
   };
 
   return (

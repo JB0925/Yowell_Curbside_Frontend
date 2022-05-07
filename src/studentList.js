@@ -54,13 +54,21 @@ export default function StudentList({ curbsideData, sendFunc }) {
 
   const toggleStudentDivStyle = {
     color: "white",
-    backgroundColor: isChecked ? "#0c162e" : "",
-    border: isChecked ? "1px solid red" : "",
+    backgroundColor:
+      isChecked || localStorage.getItem("isChecked") === "true"
+        ? "#0c162e"
+        : "",
+    border:
+      isChecked || localStorage.getItem("isChecked") === "true"
+        ? "1px solid red"
+        : "",
   };
 
   const imageStyle = {
-    width: isChecked ? "45%" : "",
-    height: isChecked ? "45%" : "",
+    width:
+      isChecked || localStorage.getItem("isChecked") === "true" ? "45%" : "",
+    height:
+      isChecked || localStorage.getItem("isChecked") === "true" ? "45%" : "",
   };
 
   const studentsInQueue = () => {
@@ -83,7 +91,11 @@ export default function StudentList({ curbsideData, sendFunc }) {
         <img
           style={imageStyle}
           id="horseshoe"
-          src={isChecked ? Horse : Horseshoe}
+          src={
+            isChecked || localStorage.getItem("isChecked") === "true"
+              ? Horse
+              : Horseshoe
+          }
           alt="horseshoe"
         />
       </div>

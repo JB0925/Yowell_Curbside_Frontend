@@ -58,6 +58,17 @@ function App() {
       }
     };
 
+    const changeBackground = () => {
+      if (localStorage.getItem("isChecked") === "false") {
+        document.body.style.backgroundColor = "#0c162e";
+        document.body.style.color = "white";
+      } else {
+        document.body.style.backgroundColor = "white";
+        document.body.style.color = "#0c162e";
+      }
+    };
+
+    changeBackground();
     getLoadedStudents();
   }, []);
 
@@ -71,21 +82,38 @@ function App() {
 
   const checkState = { isChecked, setIsChecked };
 
-  const burgerRefStyle = { color: isChecked ? "#0c162e" : "white" };
-  const sidebarRefStyle = {
-    color: isChecked ? "#0c162e" : "white",
-    backgroundColor: isChecked ? "white" : "#0c162e",
-    border: isChecked ? "1px solid #0c162e" : "",
+  const burgerRefStyle = {
+    color:
+      isChecked || localStorage.getItem("isChecked") === "true"
+        ? "#0c162e"
+        : "white",
   };
-
-  const sidebarContainerStyle = {
-    backgroundColor: isChecked ? "0c162e" : "",
+  const sidebarRefStyle = {
+    color:
+      isChecked || localStorage.getItem("isChecked") === "true"
+        ? "#0c162e"
+        : "white",
+    backgroundColor:
+      isChecked || localStorage.getItem("isChecked") === "true"
+        ? "white"
+        : "#0c162e",
+    border:
+      isChecked || localStorage.getItem("isChecked") === "true"
+        ? "1px solid #0c162e"
+        : "",
   };
 
   return (
     <div className="App">
       <nav>
-        <img src={!isChecked ? YESLogo : YESHorseLogo} alt="school logo" />
+        <img
+          src={
+            !isChecked && localStorage.getItem("isChecked") === "false"
+              ? YESLogo
+              : YESHorseLogo
+          }
+          alt="school logo"
+        />
         <h1 id="header" onClick={toggleForm}>
           YES Curbside!
         </h1>
@@ -107,11 +135,7 @@ function App() {
           />
         </div>
       </div>
-      <div
-        className="sidebar-container"
-        ref={sidebarRef}
-        // style={sidebarContainerStyle}
-      >
+      <div className="sidebar-container" ref={sidebarRef}>
         <div className="sidebar" style={sidebarRefStyle}>
           <i
             id="closeBtn"
