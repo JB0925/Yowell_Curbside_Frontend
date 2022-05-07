@@ -25,6 +25,9 @@ export default function ToggleSwitch({ checkState }) {
 
   useEffect(() => {
     const setCheckboxValue = () => {
+      if (localStorage.getItem("isChecked") === null) {
+        checkboxRef.current = false;
+      }
       if (!isChecked && localStorage.getItem("isChecked") === "true") {
         checkboxRef.current = true;
         setIsChecked((isChecked) => true);

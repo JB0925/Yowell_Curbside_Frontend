@@ -59,6 +59,9 @@ function App() {
     };
 
     const changeBackground = () => {
+      if (localStorage.getItem("isChecked") === null) {
+        return;
+      }
       if (localStorage.getItem("isChecked") === "false") {
         document.body.style.backgroundColor = "#0c162e";
         document.body.style.color = "white";
@@ -108,7 +111,8 @@ function App() {
       <nav>
         <img
           src={
-            !isChecked && localStorage.getItem("isChecked") === "false"
+            (!isChecked && localStorage.getItem("isChecked") === "false") ||
+            localStorage.getItem("isChecked") === null
               ? YESLogo
               : YESHorseLogo
           }
