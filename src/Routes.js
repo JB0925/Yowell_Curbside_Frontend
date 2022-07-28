@@ -5,25 +5,15 @@ import MainList from "./mainList";
 import StudentList from "./studentList";
 
 export default function Routes({ curbsideData, sendFunc }) {
-  const httpsRedirect = () => {
-    const HTTPS = "https";
-    if (window.location.protocol !== HTTPS) {
-      window.location.protocol = HTTPS;
-    }
-  };
-
   return (
     <Switch>
       <Route exact path="/">
-        {httpsRedirect()}
         <StudentList curbsideData={curbsideData} sendFunc={sendFunc} />
       </Route>
       <Route exact path="/admin">
-        {httpsRedirect()}
         <Admin />
       </Route>
       <Route exact path="/studentList">
-        {httpsRedirect()}
         <MainList />
       </Route>
       <Redirect to="/" />
