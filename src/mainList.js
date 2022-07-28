@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import UseRedirectToHttps from "./HttpsRedirect";
 import { BASE_URL } from "./baseUrls";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
 import "./MainList.css";
 
 export default function MainList() {
-  UseRedirectToHttps();
   const [everyStudent, setEveryStudent] = useState([]);
 
   useEffect(() => {

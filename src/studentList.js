@@ -4,10 +4,8 @@ import Horseshoe from "./horseshoe.png";
 import Horse from "./darkerHorseshoe.jpg";
 import "./studentList.css";
 import curbsideAPI from "./curbsideAPI";
-import UseRedirectToHttps from "./HttpsRedirect";
 
 export default function StudentList({ curbsideData, sendFunc }) {
-  UseRedirectToHttps();
   const { curbsideNames, setCurbsideNames, isChecked } = curbsideData;
   const ulRef = useRef();
   const ulTogglerRef = useRef();
