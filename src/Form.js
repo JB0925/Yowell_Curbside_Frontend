@@ -88,7 +88,6 @@ export default function CurbsideNumberForm({ curbsideData, sendFunc }) {
         setFormState(initialState);
         return;
       }
-      console.log(`NumberString: ${numberString}`);
       sendFunc.send(`add_${numberString}`);
     }
     setFormState(initialState);
