@@ -9,6 +9,8 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
     name: "",
   };
 
+  const allowListed = window.localStorage.getItem("allowListed") || null;
+
   const [studentData, setStudentData] = useState(initialState);
   const [userFeedback, setUserFeedback] = useState("");
   const [nextNumber, setNextNumber] = useState(null);
@@ -39,6 +41,15 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    if (!allowListed) {
+      setUserFeedback((userFeedback) => "Sorry, you must be logged in.");
+      setTimeout(() => {
+        toggleSidebar();
+        setTimeout(() => setUserFeedback(""), 0);
+      }, 1000);
+      setStudentData(initialState);
+      return;
+    }
     axios
       .post(BASE_URL, studentData)
       .then(() => setUserFeedback("Student added successfully!"))
@@ -46,8 +57,11 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
         if (nextNumber) setNextNumber(nextNumber + 1);
       })
       .catch(() => setUserFeedback("An error occurred."));
+    setTimeout(() => {
+      toggleSidebar();
+      setTimeout(() => setUserFeedback(""), 0);
+    }, 1000);
     setStudentData(initialState);
-    setTimeout(() => toggleSidebar(), 1000);
   };
 
   const giveUserFeedback = () => {

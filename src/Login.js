@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 export default function Login() {
-  const ACL = [{ username: "jbrink", password: "fajita" }];
+  const ACL_USERNAME = process.env.REACT_APP_ACL_USERNAME;
+  const ACL_PASSWORD = process.env.REACT_APP_ACL_PASSWORD;
   const initialFormState = { username: "", password: "" };
   const [formState, setFormState] = useState(initialFormState);
   const history = useHistory();
@@ -18,8 +19,7 @@ export default function Login() {
   const handleSubmit = (evt) => {
     evt.preventDefault();
     const { username, password } = formState;
-    const [admin] = ACL;
-    if (username === admin.username && password === admin.password) {
+    if (username === ACL_USERNAME && password === ACL_PASSWORD) {
       window.localStorage.setItem("allowListed", true);
       setFormState(initialFormState);
       history.push("/");
