@@ -3,7 +3,9 @@ import { useHistory } from "react-router-dom";
 
 export default function Login() {
   const ACL_USERNAME = process.env.REACT_APP_ACL_USERNAME;
+  console.log(ACL_USERNAME);
   const ACL_PASSWORD = process.env.REACT_APP_ACL_PASSWORD;
+  console.log(ACL_PASSWORD);
   const initialFormState = { username: "", password: "" };
   const [formState, setFormState] = useState(initialFormState);
   const history = useHistory();
