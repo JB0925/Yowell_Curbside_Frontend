@@ -26,7 +26,7 @@ function useWebSocketLite({
   useEffect(() => {
     const ws = new WebSocket(socketUrl);
     ws.onopen = () => {
-      // console.log("Connected to socket");
+      console.log("Connected to socket");
       setReadyState(true);
 
       // function to send messages
@@ -84,6 +84,7 @@ function useWebSocketLite({
     // and retry connection
     ws.onclose = () => {
       setReadyState(false);
+      console.log("closing....");
       // retry logic
       if (retry > 0) {
         setTimeout(() => {
