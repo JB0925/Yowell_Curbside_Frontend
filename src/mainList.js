@@ -31,6 +31,16 @@ export default function MainList() {
 
   const getNextNumberToAdd = () => {
     if (!everyStudent.length) return;
+    const studentList = everyStudent
+      .map((student) => parseInt(student.number))
+      .filter((n) => n < 400);
+
+    for (let i = 0; i < studentList.length; i++) {
+      if (studentList[i] !== i + 1) {
+        return studentList[i] - 1;
+      }
+    }
+
     return (
       everyStudent
         .map((student) => parseInt(student.number))

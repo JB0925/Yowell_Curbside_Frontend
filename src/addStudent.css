@@ -7,6 +7,20 @@
   padding: 25px;
 }
 
+.data-validity {
+  text-align: center;
+  color: white;
+  background-color: red;
+  width: 100%;
+  transition: opacity 1s;
+  opacity: 0;
+  border-radius: 8px;
+}
+
+.check-data {
+  opacity: 1;
+}
+
 .success {
   color: green;
   font-size: 1.2rem;

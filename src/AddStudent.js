@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BASE_URL } from "./baseUrls";
 import "./addStudent.css";
 
@@ -13,7 +13,13 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
 
   const [studentData, setStudentData] = useState(initialState);
   const [userFeedback, setUserFeedback] = useState("");
+  const [dataValidityMessage, setDataValidityMessage] = useState("");
   const [nextNumber, setNextNumber] = useState(null);
+  const [timeoutArray, setTimeoutArray] = useState([]);
+  const formRef = useRef();
+
+  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const digits = "1234567890";
 
   useEffect(() => {
     const getNextNumberToAdd = async () => {
@@ -31,6 +37,69 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
     getNextNumberToAdd();
   }, []);
 
+  const resetFormAndSidebar = (message, doSetMessage = true) => {
+    doSetMessage && setUserFeedback((userFeedback) => message);
+    setTimeout(() => {
+      toggleSidebar();
+      setTimeout(() => setUserFeedback(""), 0);
+    }, 1000);
+    setStudentData(initialState);
+  };
+
+  const formSectionContainsBadData = (data, listToCheckAgainst) => {
+    return data
+      .split("")
+      .some((char) => listToCheckAgainst.indexOf(char) === -1);
+  };
+
+  const handleKeyDown = (evt) => {
+    if (evt.key === "Backspace" || evt.key === "Tab") {
+      return;
+    }
+
+    const { name } = evt.target;
+
+    // Check to make sure the user is not entering letters where numbers
+    // are supposed to go. If they are, warn them.
+    if (name === "number" && formSectionContainsBadData(evt.key, digits)) {
+      if (timeoutArray.length) {
+        for (let id of timeoutArray) {
+          clearTimeout(id);
+        }
+      }
+      formRef.current.classList.add("check-data");
+      setDataValidityMessage(
+        (dataValidityMessage) =>
+          "You are entering letters where numbers are supposed to go."
+      );
+      let newArray = [];
+      let innerTimeout,
+        outerTimeout = setTimeout(() => {
+          formRef.current.classList.remove("check-data");
+          innerTimeout = setTimeout(() => {
+            setDataValidityMessage("");
+            newArray.push(innerTimeout);
+          }, 480);
+        }, 2000);
+      newArray.push(outerTimeout);
+      setTimeoutArray((timeoutArray) => [...newArray]);
+    }
+
+    // Check to make sure the user is not entering numbers where letters
+    // are supposed to go. If they are, warn them.
+    if (name === "name" && formSectionContainsBadData(evt.key, alphabet)) {
+      formRef.current.classList.add("check-data");
+      setDataValidityMessage(
+        (dataValidityMessage) =>
+          "You are entering numbers where letters are supposed to go."
+      );
+      setTimeout(() => {
+        formRef.current.classList.remove("check-data");
+        setTimeout(() => setDataValidityMessage(""), 480);
+      }, 2000);
+    }
+  };
+
   const handleChange = (evt) => {
     const { name, value } = evt.target;
     setStudentData((studentData) => ({
@@ -41,15 +110,36 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    let message;
     if (!allowListed) {
-      setUserFeedback((userFeedback) => "Sorry, you must be logged in.");
-      setTimeout(() => {
-        toggleSidebar();
-        setTimeout(() => setUserFeedback(""), 0);
-      }, 1000);
-      setStudentData(initialState);
+      message = "Sorry, you must be logged in.";
+      resetFormAndSidebar(message);
+      // setUserFeedback((userFeedback) => "Sorry, you must be logged in.");
+      // setTimeout(() => {
+      //   toggleSidebar();
+      //   setTimeout(() => setUserFeedback(""), 0);
+      // }, 1000);
+      // setStudentData(initialState);
       return;
     }
+
+    if (
+      formSectionContainsBadData(studentData.name, alphabet) ||
+      formSectionContainsBadData(studentData.number, digits)
+    ) {
+      message = "Please double check your data before entering. :)";
+      resetFormAndSidebar(message);
+      // setUserFeedback(
+      //   (userFeedback) => "Please double check your data before entering. :)"
+      // );
+      // setStudentData(initialState);
+      // setTimeout(() => {
+      //   toggleSidebar();
+      //   setTimeout(() => setUserFeedback(""), 0);
+      // }, 1000);
+      return;
+    }
+
     axios
       .post(BASE_URL, studentData)
       .then(() => setUserFeedback("Student added successfully!"))
@@ -57,11 +147,12 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
         if (nextNumber) setNextNumber(nextNumber + 1);
       })
       .catch(() => setUserFeedback("An error occurred."));
-    setTimeout(() => {
-      toggleSidebar();
-      setTimeout(() => setUserFeedback(""), 0);
-    }, 1000);
-    setStudentData(initialState);
+    resetFormAndSidebar("", false);
+    // setTimeout(() => {
+    //   toggleSidebar();
+    //   setTimeout(() => setUserFeedback(""), 0);
+    // }, 1000);
+    // setStudentData(initialState);
   };
 
   const giveUserFeedback = () => {
@@ -78,9 +169,12 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
 
   return (
     <div className="addStudent">
-      <p className="nextUp">
+      {/* <p className="nextUp">
         Add a Student - Next Number: {nextNumber === null ? null : nextNumber}
-      </p>
+      </p> */}
+      <div className="data-validity" ref={formRef}>
+        <p>{dataValidityMessage.length && dataValidityMessage}</p>
+      </div>
       <form onSubmit={handleSubmit} id="addStudentForm" style={formStyle}>
         <label htmlFor="number">Curbside number</label>
         <input
@@ -89,6 +183,7 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
           id="number"
           value={studentData.number}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
           name="number"
           required
         />
@@ -99,6 +194,7 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
           id="name"
           value={studentData.name}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
           name="name"
           required
         />
