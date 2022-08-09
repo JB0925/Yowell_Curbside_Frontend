@@ -18,7 +18,7 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
   const [timeoutArray, setTimeoutArray] = useState([]);
   const formRef = useRef();
 
-  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";
   const digits = "1234567890";
 
   useEffect(() => {
