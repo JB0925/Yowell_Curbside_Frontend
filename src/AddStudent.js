@@ -53,7 +53,7 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
   };
 
   const handleKeyDown = (evt) => {
-    if (evt.key === "Backspace" || evt.key === "Tab") {
+    if (evt.key === "Backspace" || evt.key === "Tab" || evt.key === " ") {
       return;
     }
 
