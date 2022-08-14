@@ -17,6 +17,7 @@ function App() {
 
   const [curbsideNames, setCurbsideNames] = useState([]);
   const [usedNumbers, setUsedNumbers] = useState([]);
+  const [everyStudent, setEveryStudent] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
 
   const ws = useWebSocketLite({
@@ -71,8 +72,18 @@ function App() {
       }
     };
 
+    const getEveryStudent = async () => {
+      try {
+        const studentList = await curbsideAPI.getEveryStudent();
+        setEveryStudent((everyStudent) => [...studentList]);
+      } catch (error) {
+        return;
+      }
+    };
+
     changeBackground();
     getLoadedStudents();
+    getEveryStudent();
   }, []);
 
   const curbsideData = {
@@ -84,6 +95,7 @@ function App() {
   };
 
   const checkState = { isChecked, setIsChecked };
+  const allStudents = { everyStudent, setEveryStudent };
 
   const burgerRefStyle = {
     color:
@@ -146,10 +158,18 @@ function App() {
             className="fas fa-window-close"
             onClick={toggleSidebar}
           ></i>
-          <AddStudent toggleSidebar={toggleSidebar} isChecked={isChecked} />
+          <AddStudent
+            toggleSidebar={toggleSidebar}
+            isChecked={isChecked}
+            allStudents={allStudents}
+          />
         </div>
       </div>
-      <Routes curbsideData={curbsideData} sendFunc={ws} />
+      <Routes
+        curbsideData={curbsideData}
+        sendFunc={ws}
+        allStudents={allStudents}
+      />
     </div>
   );
 }

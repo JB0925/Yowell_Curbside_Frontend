@@ -6,7 +6,7 @@ import MainList from "./mainList";
 import StudentList from "./studentList";
 import RequireAuth from "./requireAuth";
 
-export default function Routes({ curbsideData, sendFunc }) {
+export default function Routes({ curbsideData, sendFunc, allStudents }) {
   return (
     <Switch>
       <Route exact path="/" onEnter={RequireAuth()}>
@@ -16,7 +16,7 @@ export default function Routes({ curbsideData, sendFunc }) {
         <Admin />
       </Route>
       <Route exact path="/studentList" onEnter={RequireAuth()}>
-        <MainList />
+        <MainList allStudents={allStudents} />
       </Route>
       <Route exact path="/login">
         <Login />

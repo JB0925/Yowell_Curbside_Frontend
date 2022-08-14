@@ -1,21 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { BASE_URL } from "./baseUrls";
-import axios from "axios";
+import React from "react";
 import { v4 as uuid } from "uuid";
 import "./MainList.css";
 
-export default function MainList() {
-  const [everyStudent, setEveryStudent] = useState([]);
-
-  useEffect(() => {
-    const getEveryStudent = async () => {
-      const response = await axios.get(`${BASE_URL}/students/studentList`);
-      const { studentList } = response.data;
-      setEveryStudent((everyStudent) => [...studentList]);
-    };
-
-    getEveryStudent();
-  }, []);
+export default function MainList({ allStudents }) {
+  const { everyStudent } = allStudents;
 
   const displayAllStudents = () => {
     if (!everyStudent.length) return;

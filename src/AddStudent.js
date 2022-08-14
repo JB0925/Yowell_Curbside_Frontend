@@ -3,8 +3,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { BASE_URL } from "./baseUrls";
 import "./addStudent.css";
 
-export default function AddStudent({ toggleSidebar, isChecked }) {
+export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
   const initialState = {
+    addStudent: true,
+    changeStudent: false,
     number: "",
     name: "",
   };
@@ -16,9 +18,10 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
   const [dataValidityMessage, setDataValidityMessage] = useState("");
   const [nextNumber, setNextNumber] = useState(null);
   const [timeoutArray, setTimeoutArray] = useState([]);
+  const { everyStudent, setEveryStudent } = allStudents;
   const formRef = useRef();
 
-  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ& ";
+  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&.- ";
   const digits = "1234567890";
 
   useEffect(() => {
@@ -50,6 +53,17 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
     return data
       .split("")
       .some((char) => listToCheckAgainst.indexOf(char) === -1);
+  };
+
+  const setEveryStudentAfterAddingNewOne = (number, name) => {
+    everyStudent.push({ number, name });
+    everyStudent.sort((a, b) => parseInt(a.number) - parseInt(b.number));
+    setEveryStudent((everyStudent) => [...everyStudent]);
+  };
+
+  const setEveryStudentAfterChangingExistingOne = (number, name) => {
+    everyStudent[parseInt(number) - 1] = { number, name };
+    setEveryStudent((everyStudent) => [...everyStudent]);
   };
 
   const handleKeyDown = (evt) => {
@@ -114,12 +128,6 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
     if (!allowListed) {
       message = "Sorry, you must be logged in.";
       resetFormAndSidebar(message);
-      // setUserFeedback((userFeedback) => "Sorry, you must be logged in.");
-      // setTimeout(() => {
-      //   toggleSidebar();
-      //   setTimeout(() => setUserFeedback(""), 0);
-      // }, 1000);
-      // setStudentData(initialState);
       return;
     }
 
@@ -129,42 +137,76 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
     ) {
       message = "Please double check your data before entering. :)";
       resetFormAndSidebar(message);
-      // setUserFeedback(
-      //   (userFeedback) => "Please double check your data before entering. :)"
-      // );
-      // setStudentData(initialState);
-      // setTimeout(() => {
-      //   toggleSidebar();
-      //   setTimeout(() => setUserFeedback(""), 0);
-      // }, 1000);
       return;
     }
 
-    axios
-      .post(BASE_URL, studentData)
-      .then(() => setUserFeedback("Student added successfully!"))
-      .then(() => {
-        if (nextNumber) setNextNumber(nextNumber + 1);
-      })
-      .catch(() => setUserFeedback("An error occurred."));
-    resetFormAndSidebar("", false);
-    // setTimeout(() => {
-    //   toggleSidebar();
-    //   setTimeout(() => setUserFeedback(""), 0);
-    // }, 1000);
-    // setStudentData(initialState);
+    if (studentData.addStudent) {
+      axios
+        .post(BASE_URL, studentData)
+        .then(() => setUserFeedback("Student added successfully!"))
+        .then(() => {
+          if (nextNumber) setNextNumber(nextNumber + 1);
+          setEveryStudentAfterAddingNewOne(
+            studentData.number,
+            studentData.name
+          );
+        })
+        .catch(() => setUserFeedback("An error occurred."));
+      resetFormAndSidebar("", false);
+    } else {
+      try {
+        const studentToUpdate = {
+          number: studentData.number,
+          name: studentData.name,
+        };
+        axios
+          .patch(`${BASE_URL}/students/updateStudent`, studentToUpdate)
+          .then(() => setUserFeedback("Student updated successfully!"))
+          .then(() =>
+            setEveryStudentAfterChangingExistingOne(
+              studentData.number,
+              studentData.name
+            )
+          )
+          .catch(() => setUserFeedback("An error occurred."));
+        resetFormAndSidebar("", false);
+      } catch (error) {
+        resetFormAndSidebar("No student exists with the number you provided.");
+      }
+    }
   };
 
   const giveUserFeedback = () => {
     if (!userFeedback.length) return;
+
     const classNameToAdd =
-      userFeedback === "Student added successfully!" ? "success" : "error";
+      userFeedback === "Student added successfully!" ||
+      userFeedback === "Student updated successfully!"
+        ? "success"
+        : "error";
 
     return <p className={classNameToAdd}>{userFeedback}</p>;
   };
 
   const formStyle = {
     border: isChecked ? "1px solid #0c162e" : "",
+  };
+
+  const handleSelectChange = (evt) => {
+    const { value } = evt.target;
+    if (parseInt(value) === 2) {
+      setStudentData((studentData) => ({
+        ...studentData,
+        addStudent: false,
+        changeStudent: true,
+      }));
+    } else {
+      setStudentData((studentData) => ({
+        ...studentData,
+        addStudent: true,
+        changeStudent: false,
+      }));
+    }
   };
 
   return (
@@ -176,6 +218,16 @@ export default function AddStudent({ toggleSidebar, isChecked }) {
         <p>{dataValidityMessage.length && dataValidityMessage}</p>
       </div>
       <form onSubmit={handleSubmit} id="addStudentForm" style={formStyle}>
+        <label htmlFor="addStudentSelect">I want to...</label>
+        <select id="addStudentSelect" onChange={handleSelectChange}>
+          <i class="fa-solid fa-circle-caret-down"></i>
+          <option selected={studentData.addStudent} value="1">
+            Add a Student
+          </option>
+          <option selected={studentData.changeStudent} value="2">
+            Change a Student
+          </option>
+        </select>
         <label htmlFor="number">Curbside number</label>
         <input
           type="text"

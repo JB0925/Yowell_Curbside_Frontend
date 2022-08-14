@@ -100,6 +100,15 @@ class curbsideAPI {
       return;
     }
   }
+
+  static async getEveryStudent() {
+    try {
+      const response = await axios.get(`${BASE_URL}/students/studentList`);
+      return response.data.studentList;
+    } catch (error) {
+      return;
+    }
+  }
 }
 
 export default curbsideAPI;
