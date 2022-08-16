@@ -31,3 +31,30 @@
 .allStudents p {
   padding-right: 50px;
 }
+
+.allStudentsContainer form {
+  width: 100%;
+  border: none;
+}
+
+label {
+  margin-left: 10%;
+}
+
+input {
+  margin-left: 10%;
+  margin-top: 3px;
+}
+
+#message {
+  width: 100%;
+  margin-left: 10%;
+  white-space: pre-line;
+}
+
+button {
+  background-color: red;
+  border: 1px solid red;
+  margin-left: 10%;
+  margin-top: 3px;
+}
