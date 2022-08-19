@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
+import { NavLink } from "react-router-dom";
 import { BASE_URL } from "./baseUrls";
 import "./addStudent.css";
 
@@ -209,11 +210,34 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
     }
   };
 
+  const checkActive = (match, location) => {
+    if (!location) return false;
+    const { pathname } = location;
+    return pathname === "/";
+  };
+
   return (
     <div className="addStudent">
       {/* <p className="nextUp">
         Add a Student - Next Number: {nextNumber === null ? null : nextNumber}
       </p> */}
+      <div className="routes">
+        <NavLink
+          to="/"
+          activeClassName="active"
+          isActive={checkActive}
+          onClick={toggleSidebar}
+        >
+          Home
+        </NavLink>
+        <NavLink
+          to="/studentList"
+          activeClassName="active"
+          onClick={toggleSidebar}
+        >
+          Student List
+        </NavLink>
+      </div>
       <div className="data-validity" ref={formRef}>
         <p>{dataValidityMessage.length && dataValidityMessage}</p>
       </div>
