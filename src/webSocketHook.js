@@ -50,16 +50,12 @@ function useWebSocketLite({
 
       // receive messages
       ws.onmessage = (event) => {
-        if (formatMessage(event.data) === "__ping__") {
-          ws.send("__pong__");
-        }
-
-        const { action, newStudent } = formatMessage(event.data);
+        const { state, newStudent } = formatMessage(event.data);
         console.log(`Frontend Websocket handler: newStudent = ${newStudent}`);
         if (newStudent === undefined) return;
 
         if (!getNumFromStudent(newStudent)) {
-          if (action === "add" && newStudent) {
+          if (state === "add" && newStudent) {
             setCurbsideData((curbsideData) => [...curbsideData, newStudent]);
             return;
           } else {
@@ -73,7 +69,7 @@ function useWebSocketLite({
         if (newStudent !== "Student not found" && newStudent !== undefined) {
           let num = getNumFromStudent(newStudent);
           setUsedNumbers((usedNumbers) => usedNumbers.concat(num));
-          if (action === "add") {
+          if (state === "add") {
             setCurbsideData((curbsideData) => [...curbsideData, newStudent]);
           } else {
             setCurbsideData((curbsideData) => [
