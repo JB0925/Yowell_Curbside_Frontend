@@ -52,7 +52,6 @@ function useWebSocketLite({
       ws.onmessage = (event) => {
         if (formatMessage(event.data) === "__ping__") {
           ws.send("__pong__");
-          return;
         }
 
         const { action, newStudent } = formatMessage(event.data);
