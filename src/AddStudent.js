@@ -244,7 +244,7 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
       <form onSubmit={handleSubmit} id="addStudentForm" style={formStyle}>
         <label htmlFor="addStudentSelect">I want to...</label>
         <select id="addStudentSelect" onChange={handleSelectChange}>
-          <i class="fa-solid fa-circle-caret-down"></i>
+          <i className="fa-solid fa-circle-caret-down"></i>
           <option selected={studentData.addStudent} value="1">
             Add a Student
           </option>
