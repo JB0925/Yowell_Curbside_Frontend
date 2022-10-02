@@ -274,7 +274,14 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
           name="name"
           required
         />
-        <button className="studentNumber" type="submit">
+        <button
+          className="studentNumber"
+          type="submit"
+          style={{
+            backgroundColor: isChecked ? "#0c162e" : "",
+            border: isChecked ? "1px solid #0c162e" : "",
+          }}
+        >
           Submit
         </button>
       </form>

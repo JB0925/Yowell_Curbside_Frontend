@@ -49,7 +49,13 @@ export default function StudentList({ curbsideData, sendFunc }) {
 
   const toggleUlVisibility = () => {
     ulRef.current.classList.toggle("show");
-    ulTogglerRef.current.classList.toggle("fa-angle-up");
+    if (ulRef.current.classList.contains("show")) {
+      ulTogglerRef.current.classList.add("icon-angle-up");
+      ulTogglerRef.current.classList.remove("icon-angle-down");
+    } else {
+      ulTogglerRef.current.classList.add("icon-angle-down");
+      ulTogglerRef.current.classList.remove("icon-angle-up");
+    }
   };
 
   const toggleStudentDivStyle = {
@@ -78,7 +84,7 @@ export default function StudentList({ curbsideData, sendFunc }) {
         <i
           id="remove"
           data-testid="removeBtn"
-          className="fa-solid fa-x"
+          className="icon-window-close"
           onClick={() => removeName(name)}
         ></i>
       </div>
@@ -104,7 +110,7 @@ export default function StudentList({ curbsideData, sendFunc }) {
         <i
           id="showUl"
           ref={ulTogglerRef}
-          className="fa-solid fa-angle-down"
+          className="icon-angle-down"
           onClick={toggleUlVisibility}
         ></i>
         <ul ref={ulRef}>{studentsInQueue()}</ul>

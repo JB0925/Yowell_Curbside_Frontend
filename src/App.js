@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import YESLogo from "./YESLogo2.png";
 import YESHorseLogo from "./Yowell_Horse_Logo.jpeg";
 import "./App.css";
+import "./icomoon/style.css";
 import AddStudent from "./AddStudent";
 import Routes from "./Routes";
 import curbsideAPI from "./curbsideAPI";
@@ -136,7 +137,8 @@ function App() {
         <i
           style={burgerRefStyle}
           id="burgerMenu"
-          className="fa-solid fa-bars"
+          // className="fa-solid fa-bars"
+          className="icon-bars"
           ref={burgerRef}
           onClick={toggleSidebar}
         ></i>
@@ -155,8 +157,10 @@ function App() {
         <div className="sidebar" style={sidebarRefStyle}>
           <i
             id="closeBtn"
-            className="fas fa-window-close"
+            // className="fas fa-window-close"
+            className="icon-times-rectangle"
             onClick={toggleSidebar}
+            style={{ color: isChecked ? "#0c162e" : "" }}
           ></i>
           <AddStudent
             toggleSidebar={toggleSidebar}
