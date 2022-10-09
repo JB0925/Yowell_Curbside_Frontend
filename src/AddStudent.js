@@ -41,12 +41,16 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
     getNextNumberToAdd();
   }, []);
 
-  const resetFormAndSidebar = (message, doSetMessage = true) => {
+  const resetFormAndSidebar = (
+    message,
+    doSetMessage = true,
+    timeout = 1000
+  ) => {
     doSetMessage && setUserFeedback((userFeedback) => message);
     setTimeout(() => {
       toggleSidebar();
       setTimeout(() => setUserFeedback(""), 0);
-    }, 1000);
+    }, timeout);
     setStudentData(initialState);
   };
 
@@ -152,8 +156,12 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
             studentData.name
           );
         })
-        .catch(() => setUserFeedback("An error occurred."));
-      resetFormAndSidebar("", false);
+        .catch(() =>
+          setUserFeedback(
+            "An error occurred. Please check the student list to see if the student has already been added."
+          )
+        );
+      resetFormAndSidebar("", false, 2000);
     } else {
       try {
         const studentToUpdate = {
