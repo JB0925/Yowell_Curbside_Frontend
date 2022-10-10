@@ -155,13 +155,17 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
             studentData.number,
             studentData.name
           );
+          resetFormAndSidebar("", false);
         })
-        .catch(() =>
+        .catch(() => {
           setUserFeedback(
-            "An error occurred. Please check the student list to see if the student has already been added."
-          )
-        );
-      resetFormAndSidebar("", false, 2000);
+            `An error occurred. Please check the student 
+             list to see if the student has already been 
+             added, and make sure the number you have
+             provided is less than 500.`
+          );
+          resetFormAndSidebar("", false, 4500);
+        });
     } else {
       try {
         const studentToUpdate = {
