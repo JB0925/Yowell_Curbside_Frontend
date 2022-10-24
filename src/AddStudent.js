@@ -22,7 +22,7 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
   const { everyStudent, setEveryStudent } = allStudents;
   const formRef = useRef();
 
-  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&.- ";
+  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&.-, ";
   const digits = "1234567890";
 
   useEffect(() => {
