@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { BASE_URL } from "./baseUrls";
 import "./addStudent.css";
 
@@ -13,6 +13,7 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
   };
 
   const allowListed = window.localStorage.getItem("allowListed") || null;
+  const history = useHistory();
 
   const [studentData, setStudentData] = useState(initialState);
   const [userFeedback, setUserFeedback] = useState("");
@@ -117,6 +118,16 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
         setTimeout(() => setDataValidityMessage(""), 480);
       }, 2000);
     }
+  };
+
+  const handleClick = () => {
+    if (!allowListed) {
+      setTimeout(() => {
+        history.push("/login");
+      }, 0);
+    }
+
+    toggleSidebar();
   };
 
   const handleChange = (evt) => {
@@ -238,14 +249,14 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
           to="/"
           activeClassName="active"
           isActive={checkActive}
-          onClick={toggleSidebar}
+          onClick={handleClick}
         >
           Home
         </NavLink>
         <NavLink
           to="/studentList"
           activeClassName="active"
-          onClick={toggleSidebar}
+          onClick={handleClick}
         >
           Student List
         </NavLink>
