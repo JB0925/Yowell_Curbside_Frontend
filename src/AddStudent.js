@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import { BASE_URL } from "./baseUrls";
+import curbsideAPI from "./curbsideAPI";
 import "./addStudent.css";
 
 export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
@@ -28,13 +29,30 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
 
   useEffect(() => {
     const getNextNumberToAdd = async () => {
-      const response = await axios.get(`${BASE_URL}/students/studentList`);
-      const { studentList } = response.data;
-      let nextNumberUp =
-        studentList
-          .map((student) => parseInt(student.number))
-          .filter((n) => n < 400)
-          .pop() + 1;
+      let response = JSON.parse(localStorage.getItem("studentList")) || [];
+      let nextNumberUp;
+      if (!response.length) {
+        response = await axios.get(`${BASE_URL}/students/studentList`);
+        const { studentList } = response.data;
+        nextNumberUp =
+          studentList
+            .map((student) => parseInt(student.number))
+            .filter((n) => n < 400)
+            .pop() + 1;
+      } else {
+        nextNumberUp =
+          response
+            .map((student) => parseInt(student.number))
+            .filter((n) => n < 400)
+            .pop() + 1;
+      }
+      // const response = await axios.get(`${BASE_URL}/students/studentList`);
+      // const { studentList } = response.data;
+      // let nextNumberUp =
+      //   studentList
+      //     .map((student) => parseInt(student.number))
+      //     .filter((n) => n < 400)
+      //     .pop() + 1;
 
       setNextNumber((n) => nextNumberUp);
     };
@@ -160,12 +178,14 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
       axios
         .post(BASE_URL, studentData)
         .then(() => setUserFeedback("Student added successfully!"))
-        .then(() => {
+        .then(async () => {
           if (nextNumber) setNextNumber(nextNumber + 1);
           setEveryStudentAfterAddingNewOne(
             studentData.number,
             studentData.name
           );
+          const studentList = await curbsideAPI.getEveryStudent();
+          localStorage.setItem("studentList", JSON.stringify(studentList));
           resetFormAndSidebar("", false);
         })
         .catch(() => {
@@ -186,12 +206,14 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
         axios
           .patch(`${BASE_URL}/students/updateStudent`, studentToUpdate)
           .then(() => setUserFeedback("Student updated successfully!"))
-          .then(() =>
+          .then(async () => {
             setEveryStudentAfterChangingExistingOne(
               studentData.number,
               studentData.name
-            )
-          )
+            );
+            const studentList = await curbsideAPI.getEveryStudent();
+            localStorage.setItem("studentList", JSON.stringify(studentList));
+          })
           .catch(() => setUserFeedback("An error occurred."));
         resetFormAndSidebar("", false);
       } catch (error) {
