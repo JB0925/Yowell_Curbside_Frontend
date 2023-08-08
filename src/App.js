@@ -76,11 +76,12 @@ function App() {
     const getEveryStudent = async () => {
       try {
         let studentList = JSON.parse(localStorage.getItem("studentList")) || [];
-        if (!studentList.length) {
-          studentList = await curbsideAPI.getEveryStudent();
-          localStorage.setItem("studentList", JSON.stringify(studentList));
+        if (studentList.length) {
+          localStorage.removeItem("studentList");
+          // studentList = await curbsideAPI.getEveryStudent();
+          // localStorage.setItem("studentList", JSON.stringify(studentList));
         }
-        // studentList = await curbsideAPI.getEveryStudent();
+        studentList = await curbsideAPI.getEveryStudent();
         setEveryStudent((everyStudent) => [...studentList]);
       } catch (error) {
         return;
