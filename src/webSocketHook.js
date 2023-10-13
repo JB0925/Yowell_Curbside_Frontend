@@ -42,13 +42,7 @@ function useWebSocketLite({
         };
       });
 
-      // setInterval(() => {
-      //   try {
-      //     ws.send("__pong__");
-      //   } catch (err) {
-      //     console.log("error sending pong");
-      //   }
-      // }, 15000);
+      setTimeoutOnConnection(ws);
 
       const getNumFromStudent = (msg) => {
         if (!msg) return;
@@ -123,6 +117,18 @@ const formatMessage = (data) => {
   } catch (err) {
     return data;
   }
+};
+
+// There should be no reason that a connection should be open for more than 1 hour
+// However, a user may not explicity close the connection, so we should close it
+const setTimeoutOnConnection = (ws) => {
+  setTimeout(() => {
+    try {
+      ws.close(1000, "Closing due to inactivity");
+    } catch (err) {
+      console.log(err);
+    }
+  }, 3_600_000);
 };
 
 export default useWebSocketLite;
