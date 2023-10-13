@@ -42,6 +42,14 @@ function useWebSocketLite({
         };
       });
 
+      setInterval(() => {
+        try {
+          ws.send("__pong__");
+        } catch (err) {
+          console.log("error sending pong");
+        }
+      }, 15000);
+
       const getNumFromStudent = (msg) => {
         if (!msg) return;
         const pattern = /\d+/g;
