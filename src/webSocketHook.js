@@ -76,10 +76,17 @@ function useWebSocketLite({
           let num = getNumFromStudent(newStudent);
           setUsedNumbers((usedNumbers) => usedNumbers.concat(num));
           if (state === "add") {
-            setCurbsideData((curbsideData) => [...curbsideData, newStudent]);
+            setCurbsideData((curbsideData) => {
+              console.log(`curbsideData = ${curbsideData}`);
+              console.log(`newStudent = ${newStudent}`);
+              return [...curbsideData, newStudent];
+            });
           } else {
             setCurbsideData((curbsideData) => [
-              ...curbsideData.filter((name) => name !== newStudent),
+              ...curbsideData.filter((name) => {
+                console.log(`name = ${name}, newStudent = ${newStudent}`);
+                return name !== newStudent;
+              }),
             ]);
           }
         }
