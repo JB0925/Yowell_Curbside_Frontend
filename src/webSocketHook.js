@@ -58,10 +58,7 @@ function useWebSocketLite({
 
       // receive messages
       ws.onmessage = (event) => {
-        if (event.data === "__ping__") {
-          ws.send("__pong__");
-          return;
-        }
+        console.log(event.data);
         const { state, newStudent } = formatMessage(event.data);
         console.log(`Frontend Websocket handler: newStudent = ${newStudent}`);
         if (newStudent === undefined) return;
