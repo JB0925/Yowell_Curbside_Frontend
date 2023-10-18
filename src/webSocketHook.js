@@ -73,13 +73,18 @@ function useWebSocketLite({
             setCurbsideData((curbsideData) => [...curbsideData, newStudent]);
           } else {
             setCurbsideData((curbsideData) => {
-              return [
-                ...curbsideData.filter((name) => {
-                  return getNumFromStudent(name).every(
-                    (n) => !getNumFromStudent(newStudent).includes(n)
-                  );
-                }),
-              ];
+              try {
+                return [
+                  ...curbsideData.filter(function (name) {
+                    return getNumFromStudent(name).every(
+                      (n) => !getNumFromStudent(newStudent).includes(n)
+                    );
+                  }),
+                ];
+              } catch (err) {
+                console.log(err);
+                return [...curbsideData.filter((name) => name !== newStudent)];
+              }
             });
           }
         }
