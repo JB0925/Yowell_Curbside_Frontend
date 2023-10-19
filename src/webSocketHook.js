@@ -82,7 +82,6 @@ function useWebSocketLite({
                   }),
                 ];
               } catch (err) {
-                console.log(err);
                 return [...curbsideData.filter((name) => name !== newStudent)];
               }
             });
