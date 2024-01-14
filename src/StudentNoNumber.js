@@ -16,8 +16,10 @@ export default function StudentNoNumberForm({
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     toggleFunc();
-    await curbsideAPI.addStudentWithNoNumberToList(studentName);
-    sendFunc.send(`add_${studentName}`);
+    const tempNumber = Math.floor(Math.random() * (999 - 500 + 1) + 500);
+    const studentNameWithTempNumber = `#${tempNumber}: ${studentName}`;
+    await curbsideAPI.addStudentWithNoNumberToList(studentNameWithTempNumber);
+    sendFunc.send(`add_${studentNameWithTempNumber}`);
     setStudentName((studentName) => "");
     return;
   };

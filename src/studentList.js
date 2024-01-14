@@ -34,6 +34,7 @@ export default function StudentList({ curbsideData, sendFunc }) {
       await curbsideAPI.removeStudentWithNoNumberFromList(name);
       setCurbsideNames([...updatedCurbsideNames]);
       sendFunc.send(`remove_${name}`);
+      sendFunc.send(`remove_${name.split(": ")[1]}`);
       return;
     }
 
