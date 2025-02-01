@@ -213,6 +213,7 @@ export default function AddStudent({ toggleSidebar, isChecked, allStudents }) {
             );
             const studentList = await curbsideAPI.getEveryStudent();
             localStorage.setItem("studentList", JSON.stringify(studentList));
+            setEveryStudent(sl => [...studentList]);
           })
           .catch(() => setUserFeedback("An error occurred."));
         resetFormAndSidebar("", false);

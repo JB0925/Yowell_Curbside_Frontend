@@ -1,0 +1,13 @@
+export const HOME = "/";
+export const RESET_PAGE = "/admin";
+export const TEST_USERNAME = "foo";
+export const TEST_PASSWORD = "bar";
+export const ZOGBERT = "#1: Zogbert Xylophone";
+export const ZOGBERT_NAME_ONLY = "Zogbert";
+export const QUIXLEY = "#3: Quixley VonZoom";
+export const QUIXLEY_NAME_ONLY = "Quixley";
+export const SNORP_AND_QUIXLEY = "#4: Snorp Jingleberry, #3: Quixley VonZoom";
+export const ZOGBERT_AND_BLORPO = "#1: Zogbert Xylophone, #2: Blorpo McFizz";
+export const ZOGBERT_BLORPO_QUIXLEY = "#1: Zogbert Xylophone, #2: Blorpo McFizz, #3: Quixley VonZoom";
+export const BLORPO = "#2: Blorpo McFizz";
+export const BLORPO_NAME_ONLY = "Blorpo";

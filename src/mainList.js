@@ -56,7 +56,8 @@ export default function MainList({ allStudents }) {
 
   const displayAllStudents = () => {
     if (!everyStudent.length) return;
-    const studentList = everyStudent.map(({ number, name }) => (
+    const studentList = everyStudent.filter((student) => student !== undefined)
+    .map(({ number, name }) => (
       <div className="allStudents" key={uuid()}>
         <p>{number}</p>
         <p>{name}</p>
@@ -69,6 +70,7 @@ export default function MainList({ allStudents }) {
   const getNextNumberToAdd = () => {
     if (!everyStudent.length) return;
     const studentList = everyStudent
+      .filter((student) => student !== undefined)
       .map((student) => parseInt(student.number))
       .filter((n) => n < 400);
 
@@ -99,7 +101,7 @@ export default function MainList({ allStudents }) {
           type="text"
           onChange={handleChange}
         />
-        <button type="submit">Submit</button>
+        <button type="submit" id="searchBtn">Submit</button>
         <p id="message">{message.length ? message : null}</p>
       </form>
       <p className="nextNumber">{`Next number should be: ${getNextNumberToAdd()}`}</p>
