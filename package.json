@@ -12,11 +12,13 @@
     "react-router": "^6.2.2",
     "react-router-dom": "^5.3.0",
     "react-scripts": "5.0.0",
+    "serve": "^14.2.4",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "start": "serve -s build",
     "build": "react-scripts build",
     "test": "psql curbside_test < curbside_before.sql && npx playwright test && psql curbside_test < curbside_after.sql",
     "eject": "react-scripts eject"
